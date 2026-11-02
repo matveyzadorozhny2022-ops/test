@@ -1,3280 +1,401 @@
 <!DOCTYPE html>
 <html lang="ru">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Mind Tests — современные психологические тесты</title>
-
-  <style>
-    :root {
-      --bg: #070711;
-      --bg2: #10101c;
-      --text: #ffffff;
-      --muted: rgba(255, 255, 255, 0.68);
-      --soft: rgba(255, 255, 255, 0.08);
-      --soft2: rgba(255, 255, 255, 0.14);
-      --line: rgba(255, 255, 255, 0.14);
-      --accent: #8b5cf6;
-      --accent2: #06b6d4;
-      --accent3: #f472b6;
-      --good: #22c55e;
-      --warn: #f59e0b;
-      --bad: #ef4444;
-      --radius: 28px;
-      --shadow: 0 28px 90px rgba(0, 0, 0, 0.48);
-      --blur: blur(24px);
-    }
-
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-    }
-
-    html {
-      scroll-behavior: smooth;
-    }
-
-    body {
-      min-height: 100vh;
-      color: var(--text);
-      background:
-        radial-gradient(circle at 10% 10%, rgba(139, 92, 246, 0.34), transparent 34%),
-        radial-gradient(circle at 90% 18%, rgba(244, 114, 182, 0.22), transparent 28%),
-        radial-gradient(circle at 80% 88%, rgba(6, 182, 212, 0.24), transparent 32%),
-        linear-gradient(135deg, var(--bg), var(--bg2));
-      overflow-x: hidden;
-    }
-
-    body::before {
-      content: "";
-      position: fixed;
-      inset: 0;
-      pointer-events: none;
-      background-image:
-        linear-gradient(rgba(255, 255, 255, 0.035) 1px, transparent 1px),
-        linear-gradient(90deg, rgba(255, 255, 255, 0.035) 1px, transparent 1px);
-      background-size: 58px 58px;
-      mask-image: radial-gradient(circle at center, black, transparent 78%);
-      z-index: -2;
-    }
-
-    .noise {
-      position: fixed;
-      inset: 0;
-      pointer-events: none;
-      opacity: 0.12;
-      z-index: -1;
-      background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 250 250' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.45'/%3E%3C/svg%3E");
-    }
-
-    .orb {
-      position: fixed;
-      width: 320px;
-      height: 320px;
-      border-radius: 50%;
-      filter: blur(55px);
-      opacity: 0.35;
-      pointer-events: none;
-      z-index: -1;
-      animation: orbMove 12s ease-in-out infinite alternate;
-    }
-
-    .orb.one {
-      left: -90px;
-      top: 120px;
-      background: var(--accent);
-    }
-
-    .orb.two {
-      right: -110px;
-      bottom: 80px;
-      background: var(--accent2);
-      animation-delay: 1.8s;
-    }
-
-    @keyframes orbMove {
-      from {
-        transform: translate3d(0, 0, 0) scale(1);
-      }
-      to {
-        transform: translate3d(40px, -45px, 0) scale(1.12);
-      }
-    }
-
-    .page {
-      width: min(1200px, calc(100% - 32px));
-      margin: 0 auto;
-      padding: 28px 0 54px;
-    }
-
-    header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      gap: 18px;
-      margin-bottom: 50px;
-      position: sticky;
-      top: 14px;
-      z-index: 50;
-      padding: 12px;
-      border-radius: 24px;
-      background: rgba(7, 7, 17, 0.54);
-      border: 1px solid rgba(255, 255, 255, 0.09);
-      backdrop-filter: blur(22px);
-    }
-
-    .logo {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-      font-weight: 900;
-      letter-spacing: -0.04em;
-      font-size: 22px;
-      cursor: pointer;
-      user-select: none;
-    }
-
-    .logo-icon {
-      width: 46px;
-      height: 46px;
-      display: grid;
-      place-items: center;
-      border-radius: 16px;
-      background: linear-gradient(135deg, var(--accent), var(--accent2));
-      box-shadow: 0 18px 48px rgba(139, 92, 246, 0.38);
-      animation: logoPulse 3s ease-in-out infinite;
-    }
-
-    @keyframes logoPulse {
-      0%, 100% {
-        transform: rotate(0deg) scale(1);
-      }
-      50% {
-        transform: rotate(4deg) scale(1.06);
-      }
-    }
-
-    .nav {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-    }
-
-    .nav button {
-      padding: 11px 15px;
-      border-radius: 999px;
-      color: rgba(255, 255, 255, 0.78);
-      background: transparent;
-      border: 1px solid transparent;
-      font-size: 14px;
-    }
-
-    .nav button:hover {
-      color: white;
-      background: rgba(255, 255, 255, 0.09);
-      border-color: rgba(255, 255, 255, 0.12);
-    }
-
-    button {
-      border: 0;
-      cursor: pointer;
-      color: white;
-      font-weight: 800;
-      transition:
-        transform 0.25s ease,
-        background 0.25s ease,
-        border-color 0.25s ease,
-        box-shadow 0.25s ease,
-        opacity 0.25s ease;
-      font-size: 16px;
-    }
-
-    button:active {
-      transform: scale(0.97);
-    }
-
-    .section {
-      display: none;
-      animation: sectionIn 0.55s cubic-bezier(.2,.8,.2,1);
-    }
-
-    .section.active {
-      display: block;
-    }
-
-    @keyframes sectionIn {
-      from {
-        opacity: 0;
-        transform: translateY(18px) scale(0.99);
-        filter: blur(6px);
-      }
-      to {
-        opacity: 1;
-        transform: translateY(0) scale(1);
-        filter: blur(0);
-      }
-    }
-
-    .hero {
-      min-height: 650px;
-      display: grid;
-      grid-template-columns: 1.05fr 0.95fr;
-      align-items: center;
-      gap: 42px;
-    }
-
-    .badge {
-      width: fit-content;
-      display: inline-flex;
-      align-items: center;
-      gap: 9px;
-      padding: 11px 15px;
-      border-radius: 999px;
-      color: var(--muted);
-      background: rgba(255, 255, 255, 0.08);
-      border: 1px solid rgba(255, 255, 255, 0.14);
-      backdrop-filter: var(--blur);
-      margin-bottom: 22px;
-    }
-
-    .badge-dot {
-      width: 10px;
-      height: 10px;
-      border-radius: 50%;
-      background: var(--good);
-      box-shadow: 0 0 0 6px rgba(34, 197, 94, 0.12), 0 0 22px var(--good);
-    }
-
-    h1 {
-      max-width: 760px;
-      font-size: clamp(44px, 7.5vw, 90px);
-      line-height: 0.93;
-      letter-spacing: -0.08em;
-      margin-bottom: 24px;
-    }
-
-    .gradient-text {
-      background: linear-gradient(135deg, #fff 0%, #c4b5fd 38%, #67e8f9 72%, #f9a8d4 100%);
-      background-size: 200% 200%;
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      animation: gradientFlow 6s ease-in-out infinite;
-    }
-
-    @keyframes gradientFlow {
-      0%, 100% {
-        background-position: 0% 50%;
-      }
-      50% {
-        background-position: 100% 50%;
-      }
-    }
-
-    .subtitle {
-      color: var(--muted);
-      font-size: 20px;
-      line-height: 1.68;
-      max-width: 650px;
-      margin-bottom: 34px;
-    }
-
-    .actions {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 14px;
-      align-items: center;
-    }
-
-    .primary-btn {
-      position: relative;
-      overflow: hidden;
-      padding: 18px 27px;
-      border-radius: 18px;
-      background: linear-gradient(135deg, var(--accent), var(--accent2));
-      box-shadow: 0 22px 58px rgba(139, 92, 246, 0.35);
-    }
-
-    .primary-btn::after {
-      content: "";
-      position: absolute;
-      inset: 0;
-      transform: translateX(-120%);
-      background: linear-gradient(90deg, transparent, rgba(255,255,255,.32), transparent);
-      transition: transform 0.7s ease;
-    }
-
-    .primary-btn:hover {
-      transform: translateY(-4px);
-      box-shadow: 0 30px 80px rgba(139, 92, 246, 0.48);
-    }
-
-    .primary-btn:hover::after {
-      transform: translateX(120%);
-    }
-
-    .secondary-btn,
-    .ghost-btn,
-    .small-btn {
-      padding: 17px 22px;
-      border-radius: 18px;
-      background: rgba(255, 255, 255, 0.075);
-      border: 1px solid rgba(255, 255, 255, 0.14);
-      backdrop-filter: var(--blur);
-    }
-
-    .secondary-btn:hover,
-    .ghost-btn:hover,
-    .small-btn:hover {
-      transform: translateY(-3px);
-      background: rgba(255, 255, 255, 0.13);
-    }
-
-    .hero-panel {
-      position: relative;
-      min-height: 570px;
-      padding: 24px;
-      border-radius: 38px;
-      overflow: hidden;
-      background:
-        linear-gradient(160deg, rgba(255,255,255,.16), rgba(255,255,255,.05)),
-        rgba(255, 255, 255, 0.06);
-      border: 1px solid rgba(255, 255, 255, 0.16);
-      box-shadow: var(--shadow);
-      backdrop-filter: var(--blur);
-    }
-
-    .hero-panel::before {
-      content: "";
-      position: absolute;
-      inset: -120px;
-      background:
-        radial-gradient(circle at 30% 20%, rgba(139,92,246,.48), transparent 28%),
-        radial-gradient(circle at 72% 72%, rgba(6,182,212,.36), transparent 34%),
-        radial-gradient(circle at 44% 88%, rgba(244,114,182,.24), transparent 26%);
-      animation: panelGlow 8s ease-in-out infinite alternate;
-    }
-
-    @keyframes panelGlow {
-      from {
-        transform: rotate(0deg) scale(1);
-      }
-      to {
-        transform: rotate(8deg) scale(1.08);
-      }
-    }
-
-    .hero-stack {
-      position: relative;
-      z-index: 2;
-      display: grid;
-      gap: 16px;
-    }
-
-    .mini-card {
-      padding: 21px;
-      border-radius: 24px;
-      background: rgba(8, 8, 19, 0.62);
-      border: 1px solid rgba(255, 255, 255, 0.14);
-      backdrop-filter: blur(26px);
-      box-shadow: 0 18px 50px rgba(0,0,0,.25);
-      animation: float 5.5s ease-in-out infinite;
-    }
-
-    .mini-card:nth-child(2) {
-      margin-left: 46px;
-      animation-delay: .5s;
-    }
-
-    .mini-card:nth-child(3) {
-      margin-right: 38px;
-      animation-delay: 1s;
-    }
-
-    .mini-card:nth-child(4) {
-      margin-left: 82px;
-      animation-delay: 1.5s;
-    }
-
-    @keyframes float {
-      0%, 100% {
-        transform: translateY(0);
-      }
-      50% {
-        transform: translateY(-14px);
-      }
-    }
-
-    .mini-card-top {
-      display: flex;
-      justify-content: space-between;
-      gap: 12px;
-      align-items: center;
-      margin-bottom: 10px;
-    }
-
-    .mini-card h3 {
-      letter-spacing: -0.035em;
-      font-size: 18px;
-    }
-
-    .mini-pill {
-      color: rgba(255,255,255,.78);
-      font-size: 12px;
-      padding: 7px 10px;
-      border-radius: 999px;
-      background: rgba(255,255,255,.1);
-    }
-
-    .mini-card p {
-      color: var(--muted);
-      line-height: 1.5;
-      font-size: 14px;
-    }
-
-    .mini-progress {
-      height: 8px;
-      overflow: hidden;
-      border-radius: 999px;
-      background: rgba(255,255,255,.11);
-      margin-top: 15px;
-    }
-
-    .mini-progress div {
-      height: 100%;
-      border-radius: inherit;
-      background: linear-gradient(90deg, var(--accent), var(--accent2));
-      animation: loadMini 1.2s ease both;
-    }
-
-    @keyframes loadMini {
-      from {
-        width: 0;
-      }
-    }
-
-    .stats {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 14px;
-      margin-top: 28px;
-      max-width: 620px;
-    }
-
-    .stat {
-      padding: 18px;
-      border-radius: 22px;
-      background: rgba(255, 255, 255, 0.07);
-      border: 1px solid rgba(255,255,255,.11);
-      backdrop-filter: var(--blur);
-    }
-
-    .stat strong {
-      display: block;
-      font-size: 26px;
-      letter-spacing: -0.05em;
-      margin-bottom: 4px;
-    }
-
-    .stat span {
-      color: var(--muted);
-      font-size: 14px;
-    }
-
-    .section-head {
-      display: flex;
-      justify-content: space-between;
-      gap: 24px;
-      align-items: flex-end;
-      margin-bottom: 24px;
-    }
-
-    .section-head h2 {
-      font-size: clamp(34px, 5vw, 58px);
-      letter-spacing: -0.07em;
-      line-height: .95;
-      margin-bottom: 12px;
-    }
-
-    .section-head p {
-      color: var(--muted);
-      line-height: 1.6;
-      max-width: 620px;
-    }
-
-    .toolbar {
-      display: grid;
-      grid-template-columns: 1fr auto;
-      gap: 14px;
-      margin-bottom: 20px;
-    }
-
-    .search {
-      position: relative;
-    }
-
-    .search input {
-      width: 100%;
-      height: 58px;
-      border: 1px solid rgba(255,255,255,.14);
-      outline: none;
-      color: white;
-      border-radius: 20px;
-      padding: 0 20px 0 48px;
-      background: rgba(255,255,255,.075);
-      backdrop-filter: var(--blur);
-      font-size: 15px;
-    }
-
-    .search span {
-      position: absolute;
-      left: 18px;
-      top: 50%;
-      transform: translateY(-50%);
-      opacity: .7;
-    }
-
-    .category-tabs {
-      display: flex;
-      flex-wrap: wrap;
-      gap: 10px;
-      margin-bottom: 26px;
-    }
-
-    .category-tab {
-      padding: 13px 16px;
-      border-radius: 999px;
-      color: rgba(255,255,255,.74);
-      background: rgba(255,255,255,.075);
-      border: 1px solid rgba(255,255,255,.12);
-      backdrop-filter: var(--blur);
-      font-size: 14px;
-    }
-
-    .category-tab.active,
-    .category-tab:hover {
-      color: white;
-      background: linear-gradient(135deg, rgba(139,92,246,.6), rgba(6,182,212,.38));
-      border-color: rgba(255,255,255,.2);
-      transform: translateY(-2px);
-    }
-
-    .tests-grid {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 18px;
-    }
-
-    .test-card {
-      position: relative;
-      min-height: 285px;
-      padding: 22px;
-      border-radius: var(--radius);
-      overflow: hidden;
-      isolation: isolate;
-      background:
-        linear-gradient(155deg, rgba(255,255,255,.13), rgba(255,255,255,.045)),
-        rgba(255,255,255,.065);
-      border: 1px solid rgba(255,255,255,.13);
-      backdrop-filter: var(--blur);
-      box-shadow: 0 18px 55px rgba(0,0,0,.24);
-      transition: .3s cubic-bezier(.2,.8,.2,1);
-    }
-
-    .test-card::before {
-      content: "";
-      position: absolute;
-      inset: 0;
-      background:
-        radial-gradient(circle at 15% 15%, rgba(255,255,255,.16), transparent 20%),
-        radial-gradient(circle at 90% 90%, var(--cardColor), transparent 34%);
-      opacity: .48;
-      z-index: -1;
-    }
-
-    .test-card::after {
-      content: "";
-      position: absolute;
-      right: -60px;
-      bottom: -70px;
-      width: 180px;
-      height: 180px;
-      border-radius: 50%;
-      background: var(--cardColor);
-      opacity: .16;
-      filter: blur(4px);
-      transition: .3s ease;
-      z-index: -1;
-    }
-
-    .test-card:hover {
-      transform: translateY(-8px) scale(1.012);
-      box-shadow: 0 32px 90px rgba(0,0,0,.4);
-      border-color: rgba(255,255,255,.22);
-    }
-
-    .test-card:hover::after {
-      transform: scale(1.18);
-      opacity: .26;
-    }
-
-    .test-meta {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 12px;
-      margin-bottom: 18px;
-    }
-
-    .test-icon {
-      width: 58px;
-      height: 58px;
-      display: grid;
-      place-items: center;
-      border-radius: 20px;
-      font-size: 28px;
-      background: rgba(255,255,255,.1);
-      border: 1px solid rgba(255,255,255,.12);
-    }
-
-    .test-time {
-      font-size: 12px;
-      color: rgba(255,255,255,.72);
-      padding: 8px 10px;
-      border-radius: 999px;
-      background: rgba(255,255,255,.08);
-      border: 1px solid rgba(255,255,255,.1);
-    }
-
-    .test-card h3 {
-      font-size: 24px;
-      letter-spacing: -0.045em;
-      line-height: 1.05;
-      margin-bottom: 12px;
-    }
-
-    .test-card p {
-      color: var(--muted);
-      line-height: 1.55;
-      font-size: 14px;
-      margin-bottom: 22px;
-    }
-
-    .test-footer {
-      position: absolute;
-      left: 22px;
-      right: 22px;
-      bottom: 20px;
-      display: flex;
-      justify-content: space-between;
-      gap: 12px;
-      align-items: center;
-    }
-
-    .test-category {
-      color: rgba(255,255,255,.72);
-      font-size: 12px;
-    }
-
-    .start-test {
-      padding: 12px 15px;
-      border-radius: 15px;
-      background: rgba(255,255,255,.1);
-      border: 1px solid rgba(255,255,255,.14);
-      font-size: 14px;
-    }
-
-    .start-test:hover {
-      background: linear-gradient(135deg, var(--accent), var(--accent2));
-      transform: translateY(-2px);
-    }
-
-    .empty {
-      grid-column: 1 / -1;
-      padding: 38px;
-      text-align: center;
-      color: var(--muted);
-      border-radius: 28px;
-      background: rgba(255,255,255,.07);
-      border: 1px solid rgba(255,255,255,.12);
-    }
-
-    .quiz-wrap {
-      max-width: 890px;
-      margin: 0 auto;
-    }
-
-    .quiz-top {
-      display: flex;
-      justify-content: space-between;
-      align-items: flex-start;
-      gap: 18px;
-      margin-bottom: 20px;
-    }
-
-    .quiz-title {
-      font-size: clamp(31px, 5vw, 56px);
-      line-height: 0.98;
-      letter-spacing: -0.07em;
-    }
-
-    .counter {
-      white-space: nowrap;
-      padding: 13px 16px;
-      border-radius: 999px;
-      color: var(--muted);
-      background: rgba(255,255,255,.075);
-      border: 1px solid rgba(255,255,255,.12);
-      backdrop-filter: var(--blur);
-    }
-
-    .progress {
-      height: 13px;
-      border-radius: 999px;
-      background: rgba(255,255,255,.1);
-      overflow: hidden;
-      margin-bottom: 22px;
-      border: 1px solid rgba(255,255,255,.08);
-    }
-
-    .progress-bar {
-      height: 100%;
-      width: 0;
-      border-radius: inherit;
-      background: linear-gradient(90deg, var(--accent), var(--accent2), var(--accent3));
-      transition: width 0.45s cubic-bezier(.2,.8,.2,1);
-      position: relative;
-    }
-
-    .progress-bar::after {
-      content: "";
-      position: absolute;
-      inset: 0;
-      background: linear-gradient(90deg, transparent, rgba(255,255,255,.35), transparent);
-      animation: progressShine 1.6s linear infinite;
-    }
-
-    @keyframes progressShine {
-      from {
-        transform: translateX(-100%);
-      }
-      to {
-        transform: translateX(100%);
-      }
-    }
-
-    .question-card {
-      position: relative;
-      padding: clamp(22px, 4vw, 38px);
-      border-radius: 34px;
-      background:
-        linear-gradient(155deg, rgba(255,255,255,.14), rgba(255,255,255,.055)),
-        rgba(255,255,255,.07);
-      border: 1px solid rgba(255,255,255,.15);
-      box-shadow: var(--shadow);
-      backdrop-filter: var(--blur);
-      overflow: hidden;
-    }
-
-    .question-card::before {
-      content: "";
-      position: absolute;
-      right: -120px;
-      top: -120px;
-      width: 270px;
-      height: 270px;
-      border-radius: 50%;
-      background: linear-gradient(135deg, rgba(139,92,246,.24), rgba(6,182,212,.18));
-      filter: blur(4px);
-    }
-
-    .question-content {
-      position: relative;
-      z-index: 2;
-      animation: questionIn .35s ease both;
-    }
-
-    @keyframes questionIn {
-      from {
-        opacity: 0;
-        transform: translateY(12px);
-      }
-      to {
-        opacity: 1;
-        transform: translateY(0);
-      }
-    }
-
-    .question-card h3 {
-      font-size: clamp(24px, 4.2vw, 36px);
-      line-height: 1.16;
-      letter-spacing: -0.05em;
-      margin-bottom: 26px;
-    }
-
-    .answers {
-      display: grid;
-      gap: 13px;
-    }
-
-    .answer {
-      width: 100%;
-      text-align: left;
-      padding: 18px 20px;
-      border-radius: 19px;
-      color: white;
-      background: rgba(255,255,255,.076);
-      border: 1px solid rgba(255,255,255,.12);
-      line-height: 1.42;
-      font-weight: 750;
-      display: flex;
-      justify-content: space-between;
-      gap: 14px;
-      align-items: center;
-    }
-
-    .answer::after {
-      content: "→";
-      opacity: 0;
-      transform: translateX(-8px);
-      transition: .25s ease;
-    }
-
-    .answer:hover {
-      transform: translateX(7px);
-      background: rgba(255,255,255,.14);
-      border-color: rgba(255,255,255,.22);
-    }
-
-    .answer:hover::after {
-      opacity: 1;
-      transform: translateX(0);
-    }
-
-    .quiz-nav {
-      display: flex;
-      justify-content: space-between;
-      gap: 14px;
-      margin-top: 22px;
-    }
-
-    .small-btn {
-      font-size: 14px;
-      padding: 14px 17px;
-    }
-
-    .result-card {
-      position: relative;
-      max-width: 920px;
-      margin: 0 auto;
-      padding: clamp(26px, 5vw, 50px);
-      border-radius: 38px;
-      text-align: center;
-      overflow: hidden;
-      background:
-        linear-gradient(160deg, rgba(255,255,255,.16), rgba(255,255,255,.055)),
-        rgba(255,255,255,.075);
-      border: 1px solid rgba(255,255,255,.17);
-      box-shadow: var(--shadow);
-      backdrop-filter: var(--blur);
-    }
-
-    .result-card::before {
-      content: "";
-      position: absolute;
-      inset: -160px;
-      background:
-        radial-gradient(circle at 30% 20%, rgba(139,92,246,.34), transparent 26%),
-        radial-gradient(circle at 74% 72%, rgba(6,182,212,.28), transparent 28%),
-        radial-gradient(circle at 50% 90%, rgba(244,114,182,.20), transparent 24%);
-      animation: resultAura 10s ease-in-out infinite alternate;
-    }
-
-    @keyframes resultAura {
-      from {
-        transform: rotate(0deg) scale(1);
-      }
-      to {
-        transform: rotate(10deg) scale(1.08);
-      }
-    }
-
-    .result-inner {
-      position: relative;
-      z-index: 2;
-    }
-
-    .result-emoji {
-      font-size: 68px;
-      margin-bottom: 12px;
-      animation: resultEmoji .9s cubic-bezier(.2,.8,.2,1) both;
-    }
-
-    @keyframes resultEmoji {
-      0% {
-        opacity: 0;
-        transform: translateY(20px) scale(.5) rotate(-12deg);
-      }
-      70% {
-        transform: translateY(-6px) scale(1.12) rotate(4deg);
-      }
-      100% {
-        opacity: 1;
-        transform: translateY(0) scale(1) rotate(0deg);
-      }
-    }
-
-    .score-shell {
-      width: 176px;
-      height: 176px;
-      margin: 0 auto 28px;
-      position: relative;
-      display: grid;
-      place-items: center;
-      filter: drop-shadow(0 22px 55px rgba(139,92,246,.28));
-    }
-
-    .score-svg {
-      width: 176px;
-      height: 176px;
-      transform: rotate(-90deg);
-    }
-
-    .score-bg {
-      fill: none;
-      stroke: rgba(255,255,255,.12);
-      stroke-width: 14;
-    }
-
-    .score-ring {
-      fill: none;
-      stroke: url(#scoreGradient);
-      stroke-width: 14;
-      stroke-linecap: round;
-      stroke-dasharray: 478;
-      stroke-dashoffset: 478;
-      transition: stroke-dashoffset 1.55s cubic-bezier(.2,.9,.2,1);
-    }
-
-    .score-center {
-      position: absolute;
-      inset: 22px;
-      border-radius: 50%;
-      display: grid;
-      place-items: center;
-      background: rgba(7,7,17,.72);
-      border: 1px solid rgba(255,255,255,.12);
-      backdrop-filter: blur(18px);
-    }
-
-    .score-center strong {
-      font-size: 36px;
-      letter-spacing: -0.07em;
-    }
-
-    .result-label {
-      display: inline-flex;
-      padding: 12px 18px;
-      border-radius: 999px;
-      margin-bottom: 20px;
-      font-weight: 900;
-      background: linear-gradient(135deg, rgba(139,92,246,.48), rgba(6,182,212,.32));
-      border: 1px solid rgba(255,255,255,.18);
-    }
-
-    .result-card h2 {
-      font-size: clamp(34px, 6vw, 64px);
-      line-height: .98;
-      letter-spacing: -0.075em;
-      margin-bottom: 18px;
-    }
-
-    .result-desc {
-      color: var(--muted);
-      max-width: 760px;
-      margin: 0 auto 30px;
-      font-size: 18px;
-      line-height: 1.75;
-    }
-
-    .result-bars {
-      display: grid;
-      gap: 12px;
-      max-width: 620px;
-      margin: 0 auto 30px;
-      text-align: left;
-    }
-
-    .result-bar-row {
-      display: grid;
-      grid-template-columns: 120px 1fr 48px;
-      gap: 12px;
-      align-items: center;
-      color: rgba(255,255,255,.76);
-      font-size: 13px;
-    }
-
-    .result-bar-track {
-      height: 9px;
-      overflow: hidden;
-      border-radius: 999px;
-      background: rgba(255,255,255,.11);
-    }
-
-    .result-bar-fill {
-      height: 100%;
-      width: 0;
-      border-radius: inherit;
-      background: linear-gradient(90deg, var(--accent), var(--accent2));
-      transition: width 1.2s cubic-bezier(.2,.9,.2,1);
-    }
-
-    .result-actions {
-      display: flex;
-      flex-wrap: wrap;
-      justify-content: center;
-      gap: 13px;
-    }
-
-    .fade-item {
-      opacity: 0;
-      transform: translateY(14px);
-      animation: fadeUp .55s cubic-bezier(.2,.8,.2,1) forwards;
-    }
-
-    @keyframes fadeUp {
-      to {
-        opacity: 1;
-        transform: translateY(0);
-      }
-    }
-
-    @media (max-width: 1020px) {
-      .hero {
-        grid-template-columns: 1fr;
-      }
-
-      .hero-panel {
-        min-height: auto;
-      }
-
-      .tests-grid {
-        grid-template-columns: repeat(2, 1fr);
-      }
-
-      .toolbar {
-        grid-template-columns: 1fr;
-      }
-    }
-
-    @media (max-width: 720px) {
-      .page {
-        width: min(100% - 22px, 1200px);
-        padding-top: 16px;
-      }
-
-      header {
-        position: relative;
-        top: 0;
-        flex-direction: column;
-        align-items: stretch;
-      }
-
-      .nav {
-        display: grid;
-        grid-template-columns: 1fr 1fr;
-      }
-
-      .nav button {
-        width: 100%;
-      }
-
-      .hero {
-        min-height: auto;
-      }
-
-      .subtitle {
-        font-size: 17px;
-      }
-
-      .actions {
-        align-items: stretch;
-        flex-direction: column;
-      }
-
-      .stats {
-        grid-template-columns: 1fr;
-      }
-
-      .mini-card:nth-child(2),
-      .mini-card:nth-child(3),
-      .mini-card:nth-child(4) {
-        margin-left: 0;
-        margin-right: 0;
-      }
-
-      .section-head {
-        align-items: flex-start;
-        flex-direction: column;
-      }
-
-      .tests-grid {
-        grid-template-columns: 1fr;
-      }
-
-      .quiz-top {
-        flex-direction: column;
-      }
-
-      .quiz-nav {
-        flex-direction: column;
-      }
-
-      .small-btn {
-        width: 100%;
-      }
-
-      .result-bar-row {
-        grid-template-columns: 86px 1fr 42px;
-      }
-
-      .result-actions {
-        flex-direction: column;
-      }
-
-      .result-actions button {
-        width: 100%;
-      }
-    }
-
-    /* =========================================================
-   MOBILE FINAL POLISH + EXTRA ANIMATIONS
-   Вставить в самый конец <style>
-========================================================= */
-
-/* Более плавная работа на телефонах */
-html {
-  -webkit-text-size-adjust: 100%;
-  text-rendering: optimizeLegibility;
-}
-
-body {
-  min-height: 100dvh;
-  overscroll-behavior-y: none;
-  -webkit-font-smoothing: antialiased;
-}
-
-button,
-input {
-  -webkit-tap-highlight-color: transparent;
-}
-
-button {
-  touch-action: manipulation;
-}
-
-input {
-  font-size: 16px;
-}
-
-/* Красивое появление всего интерфейса */
-.page {
-  animation: appStart 0.75s cubic-bezier(.2,.8,.2,1) both;
-}
-
-@keyframes appStart {
-  from {
-    opacity: 0;
-    transform: translateY(18px);
-    filter: blur(10px);
-  }
-
-  to {
-    opacity: 1;
-    transform: translateY(0);
-    filter: blur(0);
-  }
-}
-
-/* Неоновая подсветка фона */
-body::after {
-  content: "";
-  position: fixed;
-  inset: 0;
-  pointer-events: none;
-  z-index: -1;
-  background:
-    linear-gradient(120deg, transparent 0%, rgba(255,255,255,.035) 50%, transparent 100%);
-  transform: translateX(-100%);
-  animation: backgroundShine 9s ease-in-out infinite;
-}
-
-@keyframes backgroundShine {
-  0%, 70% {
-    transform: translateX(-100%);
-  }
-
-  100% {
-    transform: translateX(100%);
-  }
-}
-
-/* Стеклянный header выглядит лучше на мобилке */
-header {
-  box-shadow: 0 18px 60px rgba(0, 0, 0, 0.22);
-}
-
-/* Карточки становятся еще живее */
-.test-card,
-.question-card,
-.result-card,
-.hero-panel,
-.mini-card,
-.stat {
-  transform-style: preserve-3d;
-}
-
-.test-card:hover .test-icon {
-  animation: iconBounce 0.6s cubic-bezier(.2,.8,.2,1);
-}
-
-@keyframes iconBounce {
-  0%, 100% {
-    transform: translateY(0) scale(1);
-  }
-
-  45% {
-    transform: translateY(-7px) scale(1.08) rotate(-4deg);
-  }
-}
-
-/* Плавный glow у карточек */
-.test-card {
-  position: relative;
-}
-
-.test-card:hover {
-  box-shadow:
-    0 34px 95px rgba(0,0,0,.42),
-    0 0 0 1px rgba(255,255,255,.08),
-    0 0 46px rgba(139,92,246,.14);
-}
-
-/* Сильнее ощущение клика по ответам */
-.answer {
-  position: relative;
-  overflow: hidden;
-}
-
-.answer::before {
-  content: "";
-  position: absolute;
-  inset: 0;
-  background: radial-gradient(circle at var(--x, 50%) var(--y, 50%), rgba(255,255,255,.22), transparent 34%);
-  opacity: 0;
-  transition: opacity .25s ease;
-}
-
-.answer:hover::before {
-  opacity: 1;
-}
-
-.answer span,
-.answer {
-  position: relative;
-  z-index: 1;
-}
-
-/* Результат появляется премиально */
-.result-label,
-.result-card h2,
-.result-desc,
-.result-bars,
-.result-actions {
-  animation: resultItemIn 0.65s cubic-bezier(.2,.8,.2,1) both;
-}
-
-.result-label {
-  animation-delay: .12s;
-}
-
-.result-card h2 {
-  animation-delay: .2s;
-}
-
-.result-desc {
-  animation-delay: .28s;
-}
-
-.result-bars {
-  animation-delay: .36s;
-}
-
-.result-actions {
-  animation-delay: .44s;
-}
-
-@keyframes resultItemIn {
-  from {
-    opacity: 0;
-    transform: translateY(18px);
-    filter: blur(8px);
-  }
-
-  to {
-    opacity: 1;
-    transform: translateY(0);
-    filter: blur(0);
-  }
-}
-
-/* Кнопки на мобилке ощущаются как приложение */
-.primary-btn,
-.secondary-btn,
-.small-btn,
-.start-test,
-.category-tab {
-  user-select: none;
-}
-
-.primary-btn:active,
-.secondary-btn:active,
-.small-btn:active,
-.start-test:active,
-.category-tab:active,
-.answer:active {
-  transform: scale(.965);
-}
-
-/* Удобный фокус для клавиатуры */
-button:focus-visible,
-input:focus-visible {
-  outline: 3px solid rgba(103, 232, 249, 0.55);
-  outline-offset: 3px;
-}
-
-/* Улучшение верхнего меню на планшетах */
-@media (max-width: 900px) {
-  header {
-    gap: 12px;
-  }
-
-  .nav {
-    width: 100%;
-  }
-
-  .nav button {
-    min-height: 44px;
-  }
-
-  .hero {
-    gap: 28px;
-  }
-
-  .hero-panel {
-    border-radius: 30px;
-  }
-
-  .tests-grid {
-    gap: 14px;
-  }
-}
-
-/* Полная мобильная адаптация */
-@media (max-width: 720px) {
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>T I P A — ЛУЧШИЙ САЙТ В МИРЕ!!!1!</title>
+<style>
+  * { box-sizing: border-box; }
   body {
-    background:
-      radial-gradient(circle at 20% 0%, rgba(139, 92, 246, 0.36), transparent 34%),
-      radial-gradient(circle at 100% 24%, rgba(6, 182, 212, 0.24), transparent 30%),
-      linear-gradient(145deg, #070711, #10101c);
-  }
-
-  body::before {
-    background-size: 42px 42px;
-    opacity: .72;
-  }
-
-  .orb {
-    width: 230px;
-    height: 230px;
-    filter: blur(46px);
-  }
-
-  .page {
-    width: min(100% - 20px, 1200px);
-    padding: 12px 0 34px;
-  }
-
-  header {
-    margin-bottom: 30px;
+    background: repeating-linear-gradient(45deg, #ff00ff, #ff00ff 10px, #00ff00 10px, #00ff00 20px);
+    font-family: "Comic Sans MS", cursive;
+    text-align: center;
+    margin: 0;
     padding: 10px;
-    border-radius: 22px;
-    background: rgba(7, 7, 17, .72);
+    overflow-x: hidden;
+    animation: bgshift 10s linear infinite;
   }
-
-  .logo {
-    width: 100%;
-    justify-content: center;
-    font-size: 21px;
+  @keyframes bgshift {
+    0% { background-position: 0 0; }
+    100% { background-position: 100px 100px; }
   }
-
-  .logo-icon {
-    width: 42px;
-    height: 42px;
-    border-radius: 15px;
-  }
-
-  .nav {
-    grid-template-columns: 1fr 1fr;
-    gap: 8px;
-  }
-
-  .nav button {
-    min-height: 46px;
-    padding: 10px 8px;
-    font-size: 13px;
-    border-radius: 15px;
-    background: rgba(255, 255, 255, .07);
-    border-color: rgba(255, 255, 255, .1);
-  }
-
-  .hero {
-    gap: 24px;
-  }
-
-  .badge {
-    font-size: 13px;
-    padding: 9px 12px;
-    margin-bottom: 18px;
-  }
-
   h1 {
-    font-size: clamp(42px, 14vw, 62px);
-    line-height: .94;
-    letter-spacing: -.075em;
-    margin-bottom: 18px;
+    color: red;
+    text-shadow: 3px 3px 0 yellow, 6px 6px 0 blue;
+    animation: blink 0.5s infinite alternate, wobble 1s infinite;
+    font-size: 3em;
+    letter-spacing: 5px;
+  }
+  @keyframes blink { from { opacity: 1; } to { opacity: 0.3; } }
+  @keyframes wobble {
+    0%, 100% { transform: rotate(-2deg); }
+    50% { transform: rotate(2deg); }
+  }
+  .block {
+    background: white;
+    border: 5px dashed red;
+    margin: 20px auto;
+    padding: 15px;
+    max-width: 650px;
+    box-shadow: 10px 10px 0 black;
+    position: relative;
+    animation: pulse 2s infinite;
+  }
+  @keyframes pulse {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.01); }
+  }
+  button {
+    background: lime;
+    border: 3px outset black;
+    font-family: "Comic Sans MS", cursive;
+    font-size: 18px;
+    padding: 8px 15px;
+    cursor: pointer;
+    margin: 5px;
+    transition: transform 0.15s, background 0.2s;
+  }
+  button:hover {
+    background: yellow;
+    transform: scale(1.1) rotate(-3deg);
+  }
+  button:active { transform: scale(0.9); }
+  .result {
+    font-weight: bold;
+    color: purple;
+    font-size: 20px;
+    margin-top: 10px;
+    min-height: 30px;
+  }
+  .meme-img {
+    max-width: 280px;
+    border: 4px solid black;
+    margin: 10px auto;
+    display: block;
+    animation: imgpulse 1.5s infinite;
+  }
+  @keyframes imgpulse {
+    0%, 100% { transform: scale(1) rotate(-1deg); }
+    50% { transform: scale(1.05) rotate(1deg); }
+  }
+  marquee { font-size: 24px; color: red; }
+  .counter { font-size: 12px; color: gray; }
+
+  .meme {
+    position: fixed;
+    font-size: 40px;
+    z-index: 9999;
+    pointer-events: none;
+    animation: float 8s linear infinite;
+  }
+  @keyframes float {
+    0%   { transform: translateY(100vh) rotate(0deg); opacity: 1; }
+    100% { transform: translateY(-20vh) rotate(360deg); opacity: 0; }
   }
 
-  .subtitle {
-    font-size: 16px;
-    line-height: 1.62;
-    margin-bottom: 24px;
+  .cat {
+    position: fixed;
+    bottom: 10px;
+    right: 10px;
+    font-size: 60px;
+    animation: bounce 0.6s infinite alternate;
+    cursor: pointer;
+    z-index: 10000;
+  }
+  @keyframes bounce {
+    from { transform: translateY(0); }
+    to   { transform: translateY(-20px); }
   }
 
-  .primary-btn,
-  .secondary-btn {
-    min-height: 56px;
-    border-radius: 18px;
-    font-size: 15px;
+  .rainbow {
+    background: linear-gradient(90deg, red, orange, yellow, green, blue, indigo, violet);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+    font-size: 28px;
+    font-weight: bold;
+    animation: rainbowmove 3s linear infinite;
+    background-size: 200% auto;
+  }
+  @keyframes rainbowmove {
+    to { background-position: 200% center; }
   }
 
-  .stats {
-    margin-top: 20px;
-    gap: 10px;
+  .spinner {
+    display: inline-block;
+    font-size: 24px;
+    animation: spin 1s linear infinite;
   }
+  @keyframes spin { to { transform: rotate(360deg); } }
 
-  .stat {
-    padding: 16px;
-    border-radius: 20px;
-  }
-
-  .stat strong {
-    font-size: 25px;
-  }
-
-  .hero-panel {
-    min-height: unset;
-    padding: 14px;
-    border-radius: 28px;
-  }
-
-  .hero-panel::before {
-    inset: -80px;
-  }
-
-  .hero-stack {
-    gap: 12px;
-  }
-
-  .mini-card {
-    padding: 17px;
-    border-radius: 21px;
-  }
-
-  .mini-card h3 {
-    font-size: 16px;
-  }
-
-  .mini-card p {
-    font-size: 13px;
-  }
-
-  .mini-pill {
-    font-size: 11px;
-    padding: 6px 9px;
-  }
-
-  .section-head {
-    margin-bottom: 18px;
-  }
-
-  .section-head h2 {
-    font-size: clamp(34px, 12vw, 48px);
-    line-height: .98;
-  }
-
-  .section-head p {
-    font-size: 15px;
-  }
-
-  .toolbar {
-    gap: 10px;
-    margin-bottom: 16px;
-  }
-
-  .search input {
-    height: 56px;
-    border-radius: 18px;
-  }
-
-  .category-tabs {
-    gap: 8px;
-    margin-bottom: 18px;
-    flex-wrap: nowrap;
-    overflow-x: auto;
-    padding-bottom: 8px;
-    scrollbar-width: none;
-    -webkit-overflow-scrolling: touch;
-  }
-
-  .category-tabs::-webkit-scrollbar {
-    display: none;
-  }
-
-  .category-tab {
-    flex: 0 0 auto;
-    min-height: 44px;
-    padding: 11px 14px;
-    font-size: 13px;
-  }
-
-  .tests-grid {
-    grid-template-columns: 1fr;
-    gap: 13px;
-  }
-
-  .test-card {
-    min-height: 250px;
-    padding: 19px;
-    border-radius: 24px;
-  }
-
-  .test-meta {
-    margin-bottom: 15px;
-  }
-
-  .test-icon {
-    width: 54px;
-    height: 54px;
-    border-radius: 18px;
-    font-size: 26px;
-  }
-
-  .test-card h3 {
+  .extra-btn {
+    background: magenta;
+    color: white;
     font-size: 22px;
-    margin-bottom: 10px;
+    border: 5px ridge yellow;
+    padding: 15px 30px;
+    cursor: pointer;
+    animation: shake 0.3s infinite;
+    margin: 20px;
+  }
+  @keyframes shake {
+    0% { transform: translate(1px, 1px) rotate(0deg); }
+    25% { transform: translate(-1px, -1px) rotate(-1deg); }
+    50% { transform: translate(1px, -1px) rotate(1deg); }
+    75% { transform: translate(-1px, 1px) rotate(0deg); }
+    100% { transform: translate(1px, 1px) rotate(0deg); }
   }
 
-  .test-card p {
-    font-size: 14px;
-    line-height: 1.52;
-    padding-right: 4px;
+  .pixel {
+    image-rendering: pixelated;
+    border: 3px dotted red;
+    max-width: 200px;
   }
-
-  .test-footer {
-    left: 19px;
-    right: 19px;
-    bottom: 18px;
-  }
-
-  .start-test {
-    min-height: 44px;
-    padding: 11px 14px;
-  }
-
-  .quiz-wrap {
-    width: 100%;
-  }
-
-  .quiz-title {
-    font-size: clamp(32px, 11vw, 46px);
-    line-height: 1;
-  }
-
-  .counter {
-    padding: 11px 14px;
-    font-size: 14px;
-  }
-
-  .progress {
-    height: 12px;
-    margin-bottom: 16px;
-  }
-
-  .question-card {
-    padding: 20px;
-    border-radius: 27px;
-  }
-
-  .question-card h3 {
-    font-size: clamp(24px, 7vw, 31px);
-    line-height: 1.18;
-    margin-bottom: 20px;
-  }
-
-  .answers {
-    gap: 11px;
-  }
-
-  .answer {
-    min-height: 58px;
-    padding: 16px 17px;
-    border-radius: 17px;
-    font-size: 15px;
-  }
-
-  .answer:hover {
-    transform: none;
-  }
-
-  .answer::after {
-    opacity: .55;
-    transform: translateX(0);
-  }
-
-  .quiz-nav {
-    gap: 10px;
-    margin-top: 18px;
-  }
-
-  .small-btn {
-    min-height: 50px;
-    border-radius: 16px;
-  }
-
-  .result-card {
-    padding: 22px 17px;
-    border-radius: 30px;
-  }
-
-  .result-emoji {
-    font-size: 56px;
-  }
-
-  .score-shell {
-    width: 154px;
-    height: 154px;
-    margin-bottom: 22px;
-  }
-
-  .score-svg {
-    width: 154px;
-    height: 154px;
-  }
-
-  .score-bg,
-  .score-ring {
-    stroke-width: 13;
-  }
-
-  .score-center {
-    inset: 20px;
-  }
-
-  .score-center strong {
-    font-size: 31px;
-  }
-
-  .result-label {
-    font-size: 14px;
-    padding: 10px 14px;
-    margin-bottom: 16px;
-  }
-
-  .result-card h2 {
-    font-size: clamp(32px, 11vw, 48px);
-    line-height: 1;
-    margin-bottom: 15px;
-  }
-
-  .result-desc {
-    font-size: 15.5px;
-    line-height: 1.68;
-    margin-bottom: 24px;
-  }
-
-  .result-bars {
-    gap: 10px;
-    margin-bottom: 24px;
-  }
-
-  .result-bar-row {
-    grid-template-columns: 82px 1fr 38px;
-    gap: 9px;
-    font-size: 12px;
-  }
-
-  .result-actions {
-    gap: 10px;
-  }
-
-  .result-actions button {
-    min-height: 54px;
-  }
-}
-
-/* Очень маленькие телефоны */
-@media (max-width: 380px) {
-  .page {
-    width: min(100% - 14px, 1200px);
-  }
-
-  h1 {
-    font-size: 39px;
-  }
-
-  .nav {
-    grid-template-columns: 1fr;
-  }
-
-  .nav button {
-    min-height: 43px;
-  }
-
-  .test-card {
-    min-height: 270px;
-  }
-
-  .question-card {
-    padding: 17px;
-  }
-
-  .answer {
-    font-size: 14px;
-  }
-
-  .result-bar-row {
-    grid-template-columns: 1fr;
-  }
-
-  .result-bar-row strong {
-    display: none;
-  }
-}
-
-/* Убираем hover-эффекты на телефонах, чтобы не залипали */
-@media (hover: none) and (pointer: coarse) {
-  .test-card:hover,
-  .primary-btn:hover,
-  .secondary-btn:hover,
-  .small-btn:hover,
-  .start-test:hover,
-  .category-tab:hover {
-    transform: none;
-  }
-
-  .test-card:hover {
-    box-shadow: 0 18px 55px rgba(0,0,0,.24);
-  }
-
-  .primary-btn:active,
-  .secondary-btn:active,
-  .small-btn:active,
-  .start-test:active,
-  .category-tab:active,
-  .answer:active {
-    transform: scale(.97);
-  }
-
-  .answer:hover::before {
-    opacity: 0;
-  }
-}
-
-/* Если у пользователя включено уменьшение анимаций */
-@media (prefers-reduced-motion: reduce) {
-  *,
-  *::before,
-  *::after {
-    animation-duration: .001ms !important;
-    animation-iteration-count: 1 !important;
-    transition-duration: .001ms !important;
-    scroll-behavior: auto !important;
-  }
-}
-  </style>
+</style>
 </head>
-
 <body>
-  <div class="noise"></div>
-  <div class="orb one"></div>
-  <div class="orb two"></div>
 
-  <div class="page">
-    <header>
-      <div class="logo" onclick="goHome()">
-        <div class="logo-icon">✦</div>
-        <span>Mind Tests</span>
-      </div>
+<h1>🔥✨ T I P A ✨🔥</h1>
+<marquee behavior="alternate" scrollamount="15">СДЕЛАНО ПО ПРИКОЛУ!!! НЕ ВОСПРИНИМАЙТЕ ВСЕРЬЁЗ!!! 🐸💩🔥</marquee>
 
-      <nav class="nav">
-        <button onclick="goHome()">Главная</button>
-        <button onclick="showTests()">Тесты</button>
-        <button onclick="showRandomTest()">Случайный тест</button>
-        <button onclick="showTests('personality')">Личность</button>
-      </nav>
-    </header>
+<div style="margin: 10px;">
+  <span class="rainbow">Добро пожаловать в лучший сайт интернета</span>
+  <span class="spinner">🌀</span>
+</div>
 
-    <main>
-      <section id="home" class="section active">
-        <div class="hero">
-          <div>
-            <div class="badge">
-              <span class="badge-dot"></span>
-              Современные тесты с мгновенным результатом
-            </div>
+<!-- ТЕСТ 1 -->
+<div class="block">
+  <h2>🌈 Тест на ориентацию 🌈</h2>
+  <p>Кто тебе больше нравится?</p>
+  <img src="https://i.imgflip.com/7q3q3q.jpg" class="meme-img" alt="мем тест ориентация" onerror="this.src='https://media.tenor.com/images/6e0e0e0e0e0e0e0e0e0e0e0e0e0e0e0e/tenor.gif'">
+  <br>
+  <button onclick="orient('male')">👨 Мальчики</button>
+  <button onclick="orient('female')">👩 Девочки</button>
+  <button onclick="orient('both')">👽 Всё что движется</button>
+  <button onclick="orient('none')">🧀 Сыр</button>
+  <div class="result" id="orient-result"></div>
+</div>
 
-            <h1>
-              Узнай себя через
-              <span class="gradient-text">стильные тесты</span>
-            </h1>
+<!-- ТЕСТ 2 -->
+<div class="block">
+  <h2>🍞 Тест на хлеб 🍞</h2>
+  <p>Какой хлеб ты любишь?</p>
+  <img src="https://i.imgflip.com/7q3q4q.jpg" class="meme-img" alt="мем хлеб" onerror="this.src='https://media.tenor.com/images/7e0e0e0e0e0e0e0e0e0e0e0e0e0e0e0e/tenor.gif'">
+  <br>
+  <button onclick="bread('white')">Белый</button>
+  <button onclick="bread('black')">Чёрный</button>
+  <button onclick="bread('none')">Я не люблю хлеб</button>
+  <button onclick="bread('all')">ВЕСЬ ХЛЕБ МОЙ</button>
+  <div class="result" id="bread-result"></div>
+</div>
 
-            <p class="subtitle">
-              Выбери категорию, пройди 10 вопросов и получи красивый результат:
-              уровень, процент, тип личности и подробное описание твоих особенностей.
-            </p>
+<!-- ТЕСТ 3 -->
+<div class="block">
+  <h2>🎯 Главный тест 🎯</h2>
+  <p>Нажми на кнопку, чтобы узнать ответ на главный вопрос жизни:</p>
+  <img src="https://media.tenor.com/images/8e0e0e0e0e0e0e0e0e0e0e0e0e0e0e0e/tenor.gif" class="meme-img" alt="иди нахуй мем" onerror="this.style.display='none'">
+  <br>
+  <button onclick="gohnah()">УЗНАТЬ ОТВЕТ</button>
+  <div class="result" id="gohnah-result" style="font-size:28px; color:red;"></div>
+</div>
 
-            <div class="actions">
-              <button class="primary-btn" onclick="showTests()">Выбрать тест</button>
-              <button class="secondary-btn" onclick="showRandomTest()">Случайный тест</button>
-            </div>
+<!-- КНОПКА ПРИКОЛЮШЕК -->
+<div class="block" style="border-color: magenta;">
+  <h2>🎲 ЕЩЁ ПРИКОЛЮШЕК 🎲</h2>
+  <p>Нажми, если тебе мало</p>
+  <button class="extra-btn" onclick="moreFun()">ДАЙ ЕЩЁ!!!</button>
+  <div class="result" id="extra-result"></div>
+</div>
 
-            <div class="stats">
-              <div class="stat">
-                <strong id="testsCount">0</strong>
-                <span>тестов</span>
-              </div>
-              <div class="stat">
-                <strong>10</strong>
-                <span>вопросов в каждом</span>
-              </div>
-              <div class="stat">
-                <strong>∞</strong>
-                <span>результатов</span>
-              </div>
-            </div>
-          </div>
+<div class="block">
+  <p class="counter">Сайт посетили: <span id="visits">0</span> раз (наверное)</p>
+  <p class="counter">⚠️ Сайт не несёт ответственности за вашу ориентацию и хлебные предпочтения ⚠️</p>
+  <p style="font-size:14px;">🐸 <em>Нажми на котика в углу, если тебе грустно</em> 🐸</p>
+</div>
 
-          <div class="hero-panel">
-            <div class="hero-stack">
-              <div class="mini-card">
-                <div class="mini-card-top">
-                  <h3>Уверенность</h3>
-                  <span class="mini-pill">популярно</span>
-                </div>
-                <p>Покажет, насколько спокойно ты проявляешь себя.</p>
-                <div class="mini-progress"><div style="width: 84%"></div></div>
-              </div>
+<!-- котик в углу -->
+<div class="cat" id="cat" onclick="petCat()">🐱</div>
 
-              <div class="mini-card">
-                <div class="mini-card-top">
-                  <h3>Тип личности</h3>
-                  <span class="mini-pill">4 типа</span>
-                </div>
-                <p>Сангвиник, холерик, флегматик или меланхолик.</p>
-                <div class="mini-progress"><div style="width: 72%"></div></div>
-              </div>
+<script>
+  // Счётчик посещений
+  let v = parseInt(localStorage.getItem('visits') || '0') + 1;
+  localStorage.setItem('visits', v);
+  document.getElementById('visits').textContent = v;
 
-              <div class="mini-card">
-                <div class="mini-card-top">
-                  <h3>Любовь</h3>
-                  <span class="mini-pill">отношения</span>
-                </div>
-                <p>Узнай, как ты проявляешь чувства и привязанность.</p>
-                <div class="mini-progress"><div style="width: 91%"></div></div>
-              </div>
+  // === ЗВУКИ ===
+  const AudioCtx = window.AudioContext || window.webkitAudioContext;
+  let audioCtx = null;
+  function ensureAudio() {
+    if (!audioCtx) audioCtx = new AudioCtx();
+    if (audioCtx.state === 'suspended') audioCtx.resume();
+    return audioCtx;
+  }
+  function beep(freq, dur, type = 'square', vol = 0.05) {
+    try {
+      const ctx = ensureAudio();
+      const osc = ctx.createOscillator();
+      const gain = ctx.createGain();
+      osc.type = type;
+      osc.frequency.value = freq;
+      gain.gain.value = vol;
+      osc.connect(gain).connect(ctx.destination);
+      osc.start();
+      osc.stop(ctx.currentTime + dur);
+    } catch(e) {}
+  }
+  function melody(notes) {
+    notes.forEach(([f, d, delay]) => {
+      setTimeout(() => beep(f, d), delay);
+    });
+  }
 
-              <div class="mini-card">
-                <div class="mini-card-top">
-                  <h3>Эмоциональный интеллект</h3>
-                  <span class="mini-pill">новое</span>
-                </div>
-                <p>Насколько хорошо ты понимаешь себя и других.</p>
-                <div class="mini-progress"><div style="width: 67%"></div></div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      <section id="tests" class="section">
-        <div class="section-head">
-          <div>
-            <h2>Выбери тест</h2>
-            <p>
-              Тесты разделены по категориям. Можно искать по названию, выбрать раздел
-              или начать случайный тест.
-            </p>
-          </div>
-
-          <button class="secondary-btn" onclick="goHome()">На главную</button>
-        </div>
-
-        <div class="toolbar">
-          <div class="search">
-            <span>⌕</span>
-            <input id="searchInput" type="text" placeholder="Поиск теста..." oninput="renderTests()" />
-          </div>
-
-          <button class="primary-btn" onclick="showRandomTest()">Случайный тест</button>
-        </div>
-
-        <div class="category-tabs" id="categoryTabs"></div>
-        <div class="tests-grid" id="testsGrid"></div>
-      </section>
-
-      <section id="quiz" class="section">
-        <div class="quiz-wrap">
-          <div class="quiz-top">
-            <h2 class="quiz-title" id="quizTitle">Название теста</h2>
-            <div class="counter" id="counter">1 / 10</div>
-          </div>
-
-          <div class="progress">
-            <div class="progress-bar" id="progressBar"></div>
-          </div>
-
-          <div class="question-card">
-            <div class="question-content" id="questionContent">
-              <h3 id="questionText">Вопрос</h3>
-              <div class="answers" id="answers"></div>
-
-              <div class="quiz-nav">
-                <button class="small-btn" onclick="backToTests()">← К тестам</button>
-                <button class="small-btn" id="prevBtn" onclick="prevQuestion()">Назад</button>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      <section id="result" class="section">
-        <div class="result-card">
-          <div class="result-inner">
-            <div class="result-emoji" id="resultEmoji">✨</div>
-
-            <div class="score-shell">
-              <svg class="score-svg" viewBox="0 0 176 176">
-                <defs>
-                  <linearGradient id="scoreGradient" x1="0%" y1="0%" x2="100%" y2="100%">
-                    <stop offset="0%" stop-color="#8b5cf6" />
-                    <stop offset="55%" stop-color="#06b6d4" />
-                    <stop offset="100%" stop-color="#f472b6" />
-                  </linearGradient>
-                </defs>
-                <circle class="score-bg" cx="88" cy="88" r="76"></circle>
-                <circle class="score-ring" id="scoreRing" cx="88" cy="88" r="76"></circle>
-              </svg>
-
-              <div class="score-center">
-                <strong id="scoreText">0%</strong>
-              </div>
-            </div>
-
-            <div class="result-label" id="resultLabel">Результат</div>
-            <h2 id="resultTitle">Твой итог</h2>
-            <p class="result-desc" id="resultDescription"></p>
-
-            <div class="result-bars" id="resultBars"></div>
-
-            <div class="result-actions">
-              <button class="primary-btn" onclick="restartCurrentTest()">Пройти еще раз</button>
-              <button class="secondary-btn" onclick="backToTests()">Выбрать другой тест</button>
-              <button class="secondary-btn" onclick="showRandomTest()">Случайный тест</button>
-            </div>
-          </div>
-        </div>
-      </section>
-    </main>
-  </div>
-
-  <script>
-    const categories = [
-      { id: "all", title: "Все" },
-      { id: "personality", title: "Личность" },
-      { id: "emotions", title: "Эмоции" },
-      { id: "relationships", title: "Отношения" },
-      { id: "power", title: "Лидерство" },
-      { id: "self", title: "Саморазвитие" }
-    ];
-
-    const scaleOptions = [
-      { text: "Да, почти всегда", value: 4 },
-      { text: "Скорее да", value: 3 },
-      { text: "Иногда", value: 2 },
-      { text: "Скорее нет", value: 1 },
-      { text: "Нет, почти никогда", value: 0 }
-    ];
-
-    const agreeOptions = [
-      { text: "Полностью согласен", value: 4 },
-      { text: "Скорее согласен", value: 3 },
-      { text: "Не уверен", value: 2 },
-      { text: "Скорее не согласен", value: 1 },
-      { text: "Совсем не согласен", value: 0 }
-    ];
-
-    const tests = [
-      {
-        id: "confidence",
-        category: "self",
-        color: "rgba(139,92,246,.9)",
-        title: "Тест на уверенность",
-        icon: "🦁",
-        short: "Проверь, насколько ты уверен в себе, своих словах и решениях.",
-        type: "scale",
-        emoji: "🦁",
-        questions: [
-          "Ты легко высказываешь свое мнение в компании?",
-          "Ты спокойно принимаешь критику?",
-          "Ты можешь первым начать разговор с незнакомым человеком?",
-          "Ты не боишься выступать перед аудиторией?",
-          "Ты умеешь отстаивать свои границы?",
-          "Ты быстро принимаешь решения?",
-          "Ты не сравниваешь себя с другими постоянно?",
-          "Ты можешь сказать «нет», если тебе неудобно?",
-          "Ты веришь, что справишься с трудной задачей?",
-          "Ты спокойно проявляешь инициативу?"
-        ],
-        options: scaleOptions,
-        results: [
-          {
-            min: 0,
-            max: 25,
-            label: "Низкая уверенность",
-            title: "Ты часто сомневаешься в себе",
-            description: "Тебе бывает сложно проявлять инициативу, говорить о своих желаниях и спокойно принимать внимание. Ты можешь избегать новых знакомств, переживать из-за оценки окружающих и долго сомневаться перед решениями. Твоя сильная сторона — осторожность, но тебе стоит чаще напоминать себе: ты имеешь право на ошибку и право быть заметным."
-          },
-          {
-            min: 26,
-            max: 60,
-            label: "Средняя уверенность",
-            title: "Ты уверен, но не во всех ситуациях",
-            description: "В привычной обстановке ты можешь быть решительным и открытым, но в новых или напряженных ситуациях иногда теряешься. Ты умеешь проявлять себя, когда чувствуешь поддержку. Тебе важно развивать внутреннюю опору: меньше зависеть от чужой реакции и чаще выбирать то, что действительно важно тебе."
-          },
-          {
-            min: 61,
-            max: 100,
-            label: "Высокая уверенность",
-            title: "Ты хорошо держишься и веришь в себя",
-            description: "Ты умеешь говорить о своем мнении, брать ответственность и действовать даже тогда, когда есть риск ошибиться. Люди могут видеть в тебе сильного и надежного человека. Главное — сохранять баланс: уверенность становится еще сильнее, когда рядом с ней есть уважение к другим и готовность слушать."
-          }
-        ]
-      },
-
-      {
-        id: "selfesteem",
-        category: "self",
-        color: "rgba(6,182,212,.9)",
-        title: "Тест на самооценку",
-        icon: "💎",
-        short: "Покажет, как ты воспринимаешь себя, свои качества и ценность.",
-        type: "scale",
-        emoji: "💎",
-        questions: [
-          "Ты считаешь себя достойным хорошего отношения?",
-          "Ты умеешь принимать комплименты без неловкости?",
-          "Ты не ругаешь себя слишком сильно за ошибки?",
-          "Ты видишь в себе сильные стороны?",
-          "Ты не позволяешь другим постоянно обесценивать тебя?",
-          "Ты заботишься о себе, даже когда занят?",
-          "Ты веришь, что твое мнение важно?",
-          "Ты не чувствуешь себя хуже других без причины?",
-          "Ты можешь гордиться своими достижениями?",
-          "Ты выбираешь себя, когда понимаешь, что тебе плохо?"
-        ],
-        options: scaleOptions,
-        results: [
-          {
-            min: 0,
-            max: 25,
-            label: "Низкая самооценка",
-            title: "Ты часто обесцениваешь себя",
-            description: "Ты можешь быть намного сильнее и интереснее, чем сам о себе думаешь. Вероятно, ты часто критикуешь себя, сравниваешь с другими и боишься быть недостаточно хорошим. Тебе важно учиться замечать свои успехи, не оправдываться за свои чувства и окружать себя людьми, рядом с которыми тебя не ломают, а поддерживают."
-          },
-          {
-            min: 26,
-            max: 60,
-            label: "Нормальная самооценка",
-            title: "Ты видишь свою ценность, но иногда сомневаешься",
-            description: "Ты в целом понимаешь свои сильные стороны, но иногда можешь зависеть от чужого мнения. Если тебя критикуют или сравнивают, самооценка может проседать. Твой путь — укреплять уважение к себе не через идеальность, а через честность: ты можешь ошибаться, уставать, меняться и все равно оставаться ценным человеком."
-          },
-          {
-            min: 61,
-            max: 100,
-            label: "Высокая самооценка",
-            title: "Ты умеешь ценить себя",
-            description: "Ты хорошо понимаешь свои границы, достоинства и право на уважение. Ты не обязан всем нравиться и не стремишься доказывать свою ценность каждому. Это сильная позиция. Главное — не превращать уверенность в высокомерие: настоящая самооценка не требует унижать других, чтобы чувствовать себя выше."
-          }
-        ]
-      },
-
-      {
-        id: "dictator",
-        category: "power",
-        color: "rgba(244,114,182,.9)",
-        title: "Тест на диктатора",
-        icon: "👑",
-        short: "Узнай, насколько ты любишь контроль, власть и жесткие правила.",
-        type: "scale",
-        emoji: "👑",
-        questions: [
-          "Ты считаешь, что люди часто нуждаются в жестком контроле?",
-          "Тебя раздражает, когда кто-то делает не так, как ты сказал?",
-          "Ты любишь, когда последнее слово остается за тобой?",
-          "Ты часто считаешь свое решение самым правильным?",
-          "Тебе сложно доверять другим важные задачи?",
-          "Ты можешь давить на человека, чтобы он согласился?",
-          "Ты считаешь, что дисциплина важнее чувств?",
-          "Ты быстро злишься, когда кто-то спорит с тобой?",
-          "Ты любишь управлять ситуацией от начала до конца?",
-          "Ты считаешь, что слабость нельзя показывать?"
-        ],
-        options: agreeOptions,
-        results: [
-          {
-            min: 0,
-            max: 25,
-            label: "Диктатор на 10%",
-            title: "Ты не стремишься подавлять других",
-            description: "Ты скорее выбираешь диалог, свободу и уважение к чужим решениям. Тебе не нужно постоянно командовать, чтобы чувствовать себя значимым. Иногда тебе может не хватать жесткости, особенно когда нужно быстро навести порядок, но в целом рядом с тобой людям спокойно."
-          },
-          {
-            min: 26,
-            max: 60,
-            label: "Диктатор на 45%",
-            title: "В тебе есть любовь к контролю",
-            description: "Ты можешь быть хорошим организатором, но иногда слишком сильно хочешь, чтобы все было по-твоему. Когда ситуация выходит из-под контроля, ты можешь раздражаться или давить на окружающих. Твоя задача — отличать лидерство от подавления. Сильный человек не только командует, но и умеет слышать."
-          },
-          {
-            min: 61,
-            max: 100,
-            label: "Диктатор на 85%",
-            title: "Ты склонен к жесткому контролю",
-            description: "Ты любишь власть, порядок и влияние. Возможно, ты часто уверен, что лучше знаешь, как другим поступать. Это может помогать в кризисных ситуациях, но в отношениях и команде такой стиль способен отталкивать людей. Попробуй чаще спрашивать, а не приказывать."
-          }
-        ]
-      },
-
-      {
-        id: "anxiety",
-        category: "emotions",
-        color: "rgba(251,191,36,.9)",
-        title: "Тест на тревожность",
-        icon: "🌙",
-        short: "Покажет, насколько часто ты переживаешь, накручиваешь себя и ждешь плохого.",
-        type: "scale",
-        emoji: "🌙",
-        questions: [
-          "Ты часто заранее переживаешь о том, что может пойти не так?",
-          "Ты прокручиваешь разговоры в голове после того, как они закончились?",
-          "Тебе сложно расслабиться, даже когда все нормально?",
-          "Ты часто думаешь, что люди могут плохо о тебе подумать?",
-          "Перед важными событиями ты сильно нервничаешь?",
-          "Ты часто ждешь подвоха или неприятностей?",
-          "Тебе сложно уснуть из-за мыслей?",
-          "Ты переживаешь из-за мелких ошибок сильнее, чем хотел бы?",
-          "Ты часто нуждаешься в подтверждении, что все в порядке?",
-          "Ты быстро напрягаешься в неопределенности?"
-        ],
-        options: scaleOptions,
-        results: [
-          {
-            min: 0,
-            max: 25,
-            label: "Низкая тревожность",
-            title: "Ты довольно спокойно воспринимаешь жизнь",
-            description: "Ты не склонен постоянно накручивать себя и чаще смотришь на ситуации трезво. Даже если появляется стресс, ты обычно способен вернуться в нормальное состояние. Твоя устойчивость помогает тебе не тратить силы на лишние переживания."
-          },
-          {
-            min: 26,
-            max: 60,
-            label: "Средняя тревожность",
-            title: "Ты переживаешь, но можешь себя удерживать",
-            description: "Иногда мысли могут становиться слишком громкими, особенно в неопределенных ситуациях. Ты способен сохранять контроль, но тебе важно вовремя отдыхать, не копить напряжение и отделять реальные факты от фантазий тревоги."
-          },
-          {
-            min: 61,
-            max: 100,
-            label: "Высокая тревожность",
-            title: "Ты часто живешь в режиме ожидания проблемы",
-            description: "Твой мозг может постоянно искать риски и угрозы, даже когда прямой опасности нет. Это утомляет и может мешать радоваться настоящему. Тебе важно развивать привычки успокоения: дыхание, режим сна, разговор с надежными людьми и меньше самокритики."
-          }
-        ]
-      },
-
-      {
-        id: "empathy",
-        category: "emotions",
-        color: "rgba(34,197,94,.9)",
-        title: "Тест на эмпатию",
-        icon: "🤝",
-        short: "Проверь, насколько хорошо ты чувствуешь эмоции других людей.",
-        type: "scale",
-        emoji: "🤝",
-        questions: [
-          "Ты быстро замечаешь, когда человеку грустно?",
-          "Ты умеешь слушать, не перебивая?",
-          "Ты часто ставишь себя на место другого?",
-          "Тебе трудно оставаться равнодушным к чужой боли?",
-          "Ты чувствуешь настроение комнаты, когда заходишь в нее?",
-          "Ты стараешься подбирать слова, чтобы не ранить?",
-          "Ты понимаешь эмоции человека даже без прямых слов?",
-          "Ты можешь поддержать человека без советов и давления?",
-          "Тебе важно, чтобы рядом с тобой людям было спокойно?",
-          "Ты часто переживаешь за близких сильнее, чем показываешь?"
-        ],
-        options: scaleOptions,
-        results: [
-          {
-            min: 0,
-            max: 25,
-            label: "Низкая эмпатия",
-            title: "Ты больше опираешься на логику, чем на чувства",
-            description: "Ты можешь быть прямым и рациональным человеком. Иногда тебе сложно понять, почему другие реагируют эмоционально. Это не делает тебя плохим, но может создавать дистанцию. Если хочешь стать ближе к людям, чаще спрашивай: «Что ты сейчас чувствуешь?»"
-          },
-          {
-            min: 26,
-            max: 60,
-            label: "Средняя эмпатия",
-            title: "Ты умеешь чувствовать людей, но не растворяешься в них",
-            description: "Ты можешь поддерживать, понимать эмоции и быть внимательным, но при этом не всегда берешь чужие переживания на себя. Это здоровый баланс. Главное — не становиться холодным, когда человеку нужна простая человеческая поддержка."
-          },
-          {
-            min: 61,
-            max: 100,
-            label: "Высокая эмпатия",
-            title: "Ты очень тонко чувствуешь людей",
-            description: "Ты замечаешь оттенки настроения, умеешь поддерживать и часто понимаешь людей без слов. Рядом с тобой может быть тепло и безопасно. Но высокая эмпатия требует границ: не все чужие эмоции нужно нести на себе."
-          }
-        ]
-      },
-
-      {
-        id: "stress",
-        category: "emotions",
-        color: "rgba(239,68,68,.9)",
-        title: "Тест на стресс",
-        icon: "🔥",
-        short: "Оцени, насколько ты перегружен и как сильно тебе нужен отдых.",
-        type: "scale",
-        emoji: "🔥",
-        questions: [
-          "Ты часто чувствуешь усталость даже после сна?",
-          "Тебя стали раздражать мелочи?",
-          "Тебе сложно сосредоточиться?",
-          "Ты часто откладываешь дела из-за перегруза?",
-          "Ты чувствуешь, что обязан делать слишком много?",
-          "Ты редко позволяешь себе отдых без чувства вины?",
-          "У тебя бывает ощущение внутреннего напряжения?",
-          "Ты стал меньше радоваться обычным вещам?",
-          "Ты часто думаешь: «Я больше не вывожу»?",
-          "Тебе сложно отключиться от проблем?"
-        ],
-        options: scaleOptions,
-        results: [
-          {
-            min: 0,
-            max: 25,
-            label: "Низкий стресс",
-            title: "Ты в хорошем ресурсном состоянии",
-            description: "Сейчас ты, скорее всего, нормально справляешься с нагрузкой. У тебя хватает сил на дела, общение и восстановление. Продолжай беречь режим, сон и личное пространство — это помогает не выгорать."
-          },
-          {
-            min: 26,
-            max: 60,
-            label: "Средний стресс",
-            title: "Ты держишься, но напряжение уже заметно",
-            description: "Ты можешь функционировать, но внутри накапливается усталость. Если игнорировать это состояние, оно может усилиться. Тебе стоит добавить больше пауз, снизить лишние обязанности и не требовать от себя постоянной продуктивности."
-          },
-          {
-            min: 61,
-            max: 100,
-            label: "Высокий стресс",
-            title: "Ты сильно перегружен",
-            description: "Твой организм может работать на пределе. Раздражение, усталость, апатия и проблемы с концентрацией — сигналы, что тебе нужен отдых и поддержка. Сейчас важно не геройствовать, а восстановить силы и убрать хотя бы часть давления."
-          }
-        ]
-      },
-
-      {
-        id: "leadership",
-        category: "power",
-        color: "rgba(14,165,233,.9)",
-        title: "Тест на лидерство",
-        icon: "🚀",
-        short: "Покажет, насколько ты умеешь вести за собой и брать ответственность.",
-        type: "scale",
-        emoji: "🚀",
-        questions: [
-          "Ты часто берешь инициативу в группе?",
-          "Люди прислушиваются к твоему мнению?",
-          "Ты можешь организовать других вокруг цели?",
-          "Ты не боишься ответственности?",
-          "Ты умеешь принимать решения в сложной ситуации?",
-          "Ты способен мотивировать людей?",
-          "Ты сохраняешь спокойствие, когда другие паникуют?",
-          "Ты умеешь распределять задачи?",
-          "Ты готов отвечать за результат команды?",
-          "Ты часто видишь, что нужно сделать, раньше других?"
-        ],
-        options: scaleOptions,
-        results: [
-          {
-            min: 0,
-            max: 25,
-            label: "Скрытый лидер",
-            title: "Ты пока не стремишься вести за собой",
-            description: "Ты можешь быть полезным и сильным человеком, но чаще предпочитаешь не брать главную роль. Возможно, тебе комфортнее действовать в одиночку или быть частью команды. Лидерство можно развить, если начинать с маленькой ответственности."
-          },
-          {
-            min: 26,
-            max: 60,
-            label: "Ситуативный лидер",
-            title: "Ты можешь вести, когда это действительно нужно",
-            description: "Ты не всегда стремишься быть главным, но в подходящий момент способен взять инициативу. Такой стиль часто вызывает доверие, потому что ты не давишь авторитетом без причины. Тебе стоит развивать уверенность в своих решениях."
-          },
-          {
-            min: 61,
-            max: 100,
-            label: "Сильный лидер",
-            title: "Ты умеешь вести людей к результату",
-            description: "Ты видишь цель, умеешь собирать людей и брать ответственность. В тебе есть энергия лидера. Главное — помнить, что лидерство не только про контроль, но и про поддержку, уважение и способность слышать команду."
-          }
-        ]
-      },
-
-      {
-        id: "introversion",
-        category: "personality",
-        color: "rgba(168,85,247,.9)",
-        title: "Интроверт или экстраверт",
-        icon: "🌗",
-        short: "Узнай, откуда ты берешь энергию: из общения или из одиночества.",
-        type: "spectrum",
-        emoji: "🌗",
-        leftLabel: "Интроверт",
-        rightLabel: "Экстраверт",
-        questions: [
-          "После долгого общения ты чувствуешь прилив сил?",
-          "Тебе легко заводить новые знакомства?",
-          "Ты любишь быть в центре событий?",
-          "Ты часто первым пишешь или зовешь людей встретиться?",
-          "В шумной компании тебе обычно комфортно?",
-          "Ты быстро раскрываешься перед новыми людьми?",
-          "Тебе скучно долго быть одному?",
-          "Ты любишь обсуждать мысли вслух?",
-          "Тебе проще отдыхать среди людей, чем одному?",
-          "Ты часто выбираешь активные мероприятия вместо спокойного вечера?"
-        ],
-        options: scaleOptions,
-        results: [
-          {
-            min: 0,
-            max: 25,
-            label: "Выраженный интроверт",
-            title: "Ты восстанавливаешься в тишине",
-            description: "Тебе важно личное пространство, спокойствие и возможность побыть наедине с собой. Ты можешь быть глубоким, наблюдательным и избирательным в общении. Это не закрытость, а твой способ беречь энергию."
-          },
-          {
-            min: 26,
-            max: 60,
-            label: "Амбиверт",
-            title: "Ты гибко переключаешься между общением и одиночеством",
-            description: "Ты можешь быть активным и общительным, но тебе также нужно время для себя. В зависимости от ситуации ты проявляешь разные стороны. Это удобный баланс: ты способен и взаимодействовать, и восстанавливаться в одиночестве."
-          },
-          {
-            min: 61,
-            max: 100,
-            label: "Выраженный экстраверт",
-            title: "Ты заряжаешься от людей и движения",
-            description: "Тебе нравится общение, новые знакомства и живые события. Ты часто оживляешь атмосферу вокруг себя. Главное — иногда давать себе паузы, чтобы не путать настоящую энергию с привычкой постоянно быть в движении."
-          }
-        ]
-      },
-
-      {
-        id: "motivation",
-        category: "self",
-        color: "rgba(250,204,21,.9)",
-        title: "Тест на мотивацию",
-        icon: "⚡",
-        short: "Покажет, насколько сильно ты заряжен на цели и развитие.",
-        type: "scale",
-        emoji: "⚡",
-        questions: [
-          "У тебя есть цели, которые тебя реально вдохновляют?",
-          "Ты можешь продолжать, даже когда быстро не получается?",
-          "Ты часто сам ищешь возможности для роста?",
-          "Ты умеешь превращать желание в конкретный план?",
-          "Ты не бросаешь дело после первой неудачи?",
-          "Ты чувствуешь интерес к будущему?",
-          "Ты регулярно делаешь шаги к своим целям?",
-          "Ты умеешь дисциплинировать себя без внешнего давления?",
-          "Ты хочешь становиться лучше, чем вчера?",
-          "Ты веришь, что твои действия могут изменить жизнь?"
-        ],
-        options: scaleOptions,
-        results: [
-          {
-            min: 0,
-            max: 25,
-            label: "Низкая мотивация",
-            title: "Сейчас тебе сложно зажечься",
-            description: "Возможно, ты устал, потерял ориентиры или не видишь смысла в том, что делаешь. Мотивация не появляется из давления. Начни с маленьких целей, которые действительно твои, а не навязанные кем-то."
-          },
-          {
-            min: 26,
-            max: 60,
-            label: "Средняя мотивация",
-            title: "У тебя есть желание, но не всегда хватает системы",
-            description: "Ты можешь вдохновляться и начинать, но иногда теряешь темп. Тебе поможет не новая мотивационная речь, а понятный план, маленькие шаги и отслеживание прогресса. Дисциплина усиливает мотивацию."
-          },
-          {
-            min: 61,
-            max: 100,
-            label: "Высокая мотивация",
-            title: "Ты заряжен двигаться вперед",
-            description: "Ты видишь цель, готов действовать и развиваться. У тебя есть внутренняя энергия, которая помогает не останавливаться. Главное — не сгореть от постоянной гонки. Сильная мотивация нуждается в отдыхе так же, как и в действиях."
-          }
-        ]
-      },
-
-      {
-        id: "jealousy",
-        category: "relationships",
-        color: "rgba(236,72,153,.9)",
-        title: "Тест на ревность",
-        icon: "🧲",
-        short: "Проверь, насколько сильно тебе нужен контроль в отношениях.",
-        type: "scale",
-        emoji: "🧲",
-        questions: [
-          "Тебя тревожит, когда близкий человек долго не отвечает?",
-          "Ты можешь проверять, с кем человек общается?",
-          "Ты часто сравниваешь себя с другими?",
-          "Тебе неприятно, когда партнер тепло общается с кем-то еще?",
-          "Ты быстро представляешь худший сценарий?",
-          "Тебе важно постоянно получать подтверждение любви?",
-          "Ты можешь обижаться из-за лайков или переписок?",
-          "Тебе сложно доверять полностью?",
-          "Ты боишься, что тебя могут заменить?",
-          "Ты хочешь знать почти все о действиях партнера?"
-        ],
-        options: scaleOptions,
-        results: [
-          {
-            min: 0,
-            max: 25,
-            label: "Низкая ревность",
-            title: "Ты умеешь доверять",
-            description: "Ты не стремишься контролировать человека и обычно спокойно относишься к его личному пространству. Для тебя отношения строятся на доверии. Главное — не путать спокойствие с равнодушием: иногда близким тоже важно слышать, что они тебе дороги."
-          },
-          {
-            min: 26,
-            max: 60,
-            label: "Средняя ревность",
-            title: "Ты ревнуешь, когда чувствуешь угрозу",
-            description: "В обычных условиях ты можешь доверять, но при неопределенности начинаешь тревожиться. Тебе важно говорить о своих чувствах без обвинений. Ревность часто просит не контроля, а ясности, тепла и честного диалога."
-          },
-          {
-            min: 61,
-            max: 100,
-            label: "Высокая ревность",
-            title: "Тебе сложно чувствовать безопасность в отношениях",
-            description: "Ты можешь сильно бояться потери, сравнивать себя с другими и искать подтверждения. Это может быть болезненно и для тебя, и для партнера. Тебе важно укреплять самооценку и учиться отличать реальные факты от тревожных фантазий."
-          }
-        ]
-      },
-
-      {
-        id: "boundaries",
-        category: "relationships",
-        color: "rgba(20,184,166,.9)",
-        title: "Тест на личные границы",
-        icon: "🛡️",
-        short: "Покажет, умеешь ли ты защищать себя без чувства вины.",
-        type: "scale",
-        emoji: "🛡️",
-        questions: [
-          "Ты можешь отказать, если тебе неудобно?",
-          "Ты говоришь прямо, когда тебе неприятно?",
-          "Ты не берешь на себя чужие обязанности постоянно?",
-          "Ты можешь закончить разговор, если он токсичен?",
-          "Ты не оправдываешься за каждое свое решение?",
-          "Ты умеешь просить уважать твое время?",
-          "Ты не позволяешь людям давить на жалость?",
-          "Ты выбираешь себя, если ситуация тебе вредит?",
-          "Ты не боишься расстроить человека своим отказом?",
-          "Ты понимаешь, где твоя ответственность, а где чужая?"
-        ],
-        options: scaleOptions,
-        results: [
-          {
-            min: 0,
-            max: 25,
-            label: "Слабые границы",
-            title: "Тебе сложно защищать свое пространство",
-            description: "Ты можешь часто соглашаться против желания, терпеть неудобство и бояться отказом испортить отношения. Но границы — это не грубость, а способ сохранить уважение к себе. Начни с маленьких честных «мне так не подходит»."
-          },
-          {
-            min: 26,
-            max: 60,
-            label: "Средние границы",
-            title: "Ты умеешь защищаться, но не всегда уверенно",
-            description: "В некоторых ситуациях ты можешь сказать «нет», но иногда чувство вины или страх конфликта мешают. Тебе стоит помнить: чужое недовольство не всегда означает, что ты сделал что-то плохое."
-          },
-          {
-            min: 61,
-            max: 100,
-            label: "Сильные границы",
-            title: "Ты хорошо понимаешь и защищаешь себя",
-            description: "Ты умеешь уважать себя, свое время и свои чувства. Ты не обязан спасать всех ценой собственного состояния. Такая позиция помогает строить зрелые отношения, где есть не давление, а честность и уважение."
-          }
-        ]
-      },
-
-      {
-        id: "ei",
-        category: "emotions",
-        color: "rgba(99,102,241,.9)",
-        title: "Эмоциональный интеллект",
-        icon: "🧩",
-        short: "Насколько хорошо ты понимаешь свои эмоции и реакции других.",
-        type: "scale",
-        emoji: "🧩",
-        questions: [
-          "Ты умеешь назвать, что именно чувствуешь?",
-          "Ты понимаешь, почему у тебя меняется настроение?",
-          "Ты можешь остановиться перед резкой реакцией?",
-          "Ты замечаешь эмоции других людей?",
-          "Ты умеешь говорить о чувствах без обвинений?",
-          "Ты можешь успокоить себя в стрессовой ситуации?",
-          "Ты понимаешь, какие слова могут ранить другого?",
-          "Ты умеешь признавать свою неправоту?",
-          "Ты различаешь обиду, злость, страх и усталость?",
-          "Ты можешь обсуждать сложные темы спокойно?"
-        ],
-        options: scaleOptions,
-        results: [
-          {
-            min: 0,
-            max: 25,
-            label: "Низкий эмоциональный интеллект",
-            title: "Тебе пока сложно разбираться в эмоциях",
-            description: "Иногда чувства могут управлять тобой раньше, чем ты успеваешь их понять. Это можно развить: начни замечать, что именно ты чувствуешь, где это ощущается в теле и какая потребность стоит за эмоцией."
-          },
-          {
-            min: 26,
-            max: 60,
-            label: "Средний эмоциональный интеллект",
-            title: "Ты понимаешь эмоции, но иногда теряешь контроль",
-            description: "Ты способен анализировать свои реакции и понимать других, но в напряженных ситуациях можешь сорваться или закрыться. Тебе поможет пауза перед ответом и привычка говорить о себе: «Я чувствую», а не «Ты виноват»."
-          },
-          {
-            min: 61,
-            max: 100,
-            label: "Высокий эмоциональный интеллект",
-            title: "Ты хорошо понимаешь себя и людей",
-            description: "Ты умеешь замечать эмоции, говорить о них и не разрушать контакт даже в сложных разговорах. Это сильный навык для отношений, дружбы и работы. Главное — не использовать понимание людей для манипуляций."
-          }
-        ]
-      },
-
-      {
-        id: "charisma",
-        category: "personality",
-        color: "rgba(251,113,133,.9)",
-        title: "Тест на харизму",
-        icon: "✨",
-        short: "Проверь, насколько ты притягиваешь внимание и влияешь на атмосферу.",
-        type: "scale",
-        emoji: "✨",
-        questions: [
-          "Люди часто запоминают тебя после знакомства?",
-          "Ты умеешь интересно рассказывать истории?",
-          "Тебе легко удерживать внимание собеседника?",
-          "Ты часто задаешь настроение в компании?",
-          "Тебе говорят, что с тобой интересно?",
-          "Ты умеешь быть естественным, а не играть роль?",
-          "Ты можешь легко пошутить или разрядить обстановку?",
-          "Ты излучаешь энергию, которую замечают другие?",
-          "Ты умеешь говорить уверенно и живо?",
-          "Люди часто хотят продолжить общение с тобой?"
-        ],
-        options: scaleOptions,
-        results: [
-          {
-            min: 0,
-            max: 25,
-            label: "Спокойная харизма",
-            title: "Ты не стремишься быть в центре внимания",
-            description: "Твоя привлекательность может быть тихой: надежность, глубина, спокойствие. Ты не обязательно должен быть громким, чтобы быть интересным. Харизма бывает не только яркой, но и мягкой."
-          },
-          {
-            min: 26,
-            max: 60,
-            label: "Умеренная харизма",
-            title: "В тебе есть заметное обаяние",
-            description: "Ты можешь заинтересовать людей, особенно когда расслаблен и говоришь о том, что тебе действительно важно. Твоя харизма раскрывается сильнее, когда ты перестаешь пытаться всем понравиться."
-          },
-          {
-            min: 61,
-            max: 100,
-            label: "Сильная харизма",
-            title: "Ты умеешь притягивать внимание",
-            description: "В тебе есть энергия, которую люди замечают. Ты можешь вдохновлять, смешить, вести разговор и создавать атмосферу. Главное — использовать это не для манипуляции, а для искреннего контакта."
-          }
-        ]
-      },
-
-      {
-        id: "personality",
-        category: "personality",
-        color: "rgba(139,92,246,.9)",
-        title: "Тест на тип личности",
-        icon: "🧠",
-        short: "Определит твой темперамент: сангвиник, холерик, флегматик или меланхолик.",
-        type: "personality",
-        emoji: "🧠",
-        questions: [
-          {
-            text: "Как ты ведешь себя в новой компании?",
-            answers: [
-              { text: "Быстро знакомлюсь и шучу", type: "sanguine" },
-              { text: "Сразу занимаю активную позицию", type: "choleric" },
-              { text: "Спокойно наблюдаю и постепенно включаюсь", type: "phlegmatic" },
-              { text: "Смущаюсь и долго привыкаю", type: "melancholic" }
-            ]
-          },
-          {
-            text: "Как ты реагируешь на конфликт?",
-            answers: [
-              { text: "Пытаюсь разрядить обстановку", type: "sanguine" },
-              { text: "Могу резко ответить и спорить", type: "choleric" },
-              { text: "Сохраняю спокойствие и ищу компромисс", type: "phlegmatic" },
-              { text: "Сильно переживаю внутри", type: "melancholic" }
-            ]
-          },
-          {
-            text: "Что тебе ближе в работе?",
-            answers: [
-              { text: "Движение, общение и новые идеи", type: "sanguine" },
-              { text: "Быстрые решения и результат", type: "choleric" },
-              { text: "Стабильность и понятный план", type: "phlegmatic" },
-              { text: "Глубина, качество и внимательность", type: "melancholic" }
-            ]
-          },
-          {
-            text: "Как ты обычно принимаешь решения?",
-            answers: [
-              { text: "Легко, по настроению", type: "sanguine" },
-              { text: "Быстро и уверенно", type: "choleric" },
-              { text: "Спокойно, без спешки", type: "phlegmatic" },
-              { text: "Долго думаю и анализирую", type: "melancholic" }
-            ]
-          },
-          {
-            text: "Что тебя больше всего раздражает?",
-            answers: [
-              { text: "Скука и однообразие", type: "sanguine" },
-              { text: "Медлительность и слабость", type: "choleric" },
-              { text: "Хаос и давление", type: "phlegmatic" },
-              { text: "Грубость и несправедливость", type: "melancholic" }
-            ]
-          },
-          {
-            text: "Как ты проявляешь эмоции?",
-            answers: [
-              { text: "Ярко и открыто", type: "sanguine" },
-              { text: "Сильно, иногда резко", type: "choleric" },
-              { text: "Сдержанно и спокойно", type: "phlegmatic" },
-              { text: "Глубоко, но не всегда показываю", type: "melancholic" }
-            ]
-          },
-          {
-            text: "Какой отдых тебе ближе?",
-            answers: [
-              { text: "Встречи, прогулки, движ", type: "sanguine" },
-              { text: "Активность, спорт, соревнование", type: "choleric" },
-              { text: "Дом, спокойствие, привычный ритм", type: "phlegmatic" },
-              { text: "Музыка, книги, одиночество", type: "melancholic" }
-            ]
-          },
-          {
-            text: "Что люди чаще замечают в тебе?",
-            answers: [
-              { text: "Общительность и легкость", type: "sanguine" },
-              { text: "Энергию и силу характера", type: "choleric" },
-              { text: "Надежность и спокойствие", type: "phlegmatic" },
-              { text: "Чувствительность и глубину", type: "melancholic" }
-            ]
-          },
-          {
-            text: "Как ты относишься к переменам?",
-            answers: [
-              { text: "Люблю новое", type: "sanguine" },
-              { text: "Использую перемены как шанс", type: "choleric" },
-              { text: "Привыкаю постепенно", type: "phlegmatic" },
-              { text: "Могу тревожиться и сомневаться", type: "melancholic" }
-            ]
-          },
-          {
-            text: "Что для тебя важнее всего?",
-            answers: [
-              { text: "Радость, свобода и общение", type: "sanguine" },
-              { text: "Победа, цель и влияние", type: "choleric" },
-              { text: "Мир, стабильность и комфорт", type: "phlegmatic" },
-              { text: "Смысл, искренность и чувства", type: "melancholic" }
-            ]
-          }
-        ],
-        results: {
-          sanguine: {
-            label: "Сангвиник",
-            title: "Ты живой, открытый и энергичный человек",
-            description: "Ты легко входишь в контакт, любишь движение, новые впечатления и людей. Рядом с тобой часто становится легче, потому что ты умеешь создавать атмосферу. Иногда тебе может не хватать усидчивости, но твоя сила — оптимизм, гибкость и способность быстро восстанавливаться."
-          },
-          choleric: {
-            label: "Холерик",
-            title: "Ты сильный, быстрый и заряженный на результат",
-            description: "Ты не любишь стоять на месте, быстро принимаешь решения и можешь вести за собой. В тебе много энергии, прямоты и желания побеждать. Иногда ты можешь быть резким или нетерпеливым. Твоя задача — управлять силой так, чтобы она вдохновляла, а не давила."
-          },
-          phlegmatic: {
-            label: "Флегматик",
-            title: "Ты спокойный, надежный и устойчивый человек",
-            description: "Ты редко поддаешься панике, умеешь сохранять равновесие и доводить дела до конца. Людям может быть комфортно рядом с тобой, потому что от тебя исходит стабильность. Твоя главная сила — терпение, надежность и внутренний порядок."
-          },
-          melancholic: {
-            label: "Меланхолик",
-            title: "Ты глубокий, чувствительный и внимательный человек",
-            description: "Ты тонко чувствуешь людей, замечаешь детали и часто переживаешь больше, чем показываешь. Ты можешь быть осторожным в новых знакомствах, но твоя чувствительность — не слабость. Это способность видеть глубже и создавать искренние связи."
-          }
-        }
-      },
-
-      {
-        id: "love",
-        category: "relationships",
-        color: "rgba(239,68,68,.9)",
-        title: "Тест на вид любви",
-        icon: "❤️",
-        short: "Узнай, как именно ты проявляешь любовь и привязанность.",
-        type: "personality",
-        emoji: "❤️",
-        questions: [
-          {
-            text: "Что для тебя самый сильный знак любви?",
-            answers: [
-              { text: "Когда мне говорят теплые слова", type: "words" },
-              { text: "Когда проводят со мной время", type: "time" },
-              { text: "Когда помогают делом", type: "help" },
-              { text: "Когда обнимают и держат за руку", type: "touch" }
-            ]
-          },
-          {
-            text: "Как ты сам чаще показываешь любовь?",
-            answers: [
-              { text: "Говорю комплименты и поддерживаю", type: "words" },
-              { text: "Выделяю человеку свое время", type: "time" },
-              { text: "Помогаю, решаю проблемы", type: "help" },
-              { text: "Проявляю нежность через прикосновения", type: "touch" }
-            ]
-          },
-          {
-            text: "Что тебя сильнее всего ранит?",
-            answers: [
-              { text: "Холодные или грубые слова", type: "words" },
-              { text: "Когда меня постоянно игнорируют", type: "time" },
-              { text: "Когда мне не помогают в трудный момент", type: "help" },
-              { text: "Когда нет близости и нежности", type: "touch" }
-            ]
-          },
-          {
-            text: "Идеальный вечер с близким человеком — это...",
-            answers: [
-              { text: "Долгий честный разговор", type: "words" },
-              { text: "Совместная прогулка или фильм", type: "time" },
-              { text: "Когда мы вместе что-то делаем и помогаем друг другу", type: "help" },
-              { text: "Объятия, тепло и спокойствие рядом", type: "touch" }
-            ]
-          },
-          {
-            text: "Что ты ждешь после тяжелого дня?",
-            answers: [
-              { text: "Слов поддержки", type: "words" },
-              { text: "Чтобы человек был рядом", type: "time" },
-              { text: "Чтобы помогли с делами", type: "help" },
-              { text: "Чтобы обняли", type: "touch" }
-            ]
-          },
-          {
-            text: "Какой подарок тебе приятнее?",
-            answers: [
-              { text: "Письмо или сообщение с важными словами", type: "words" },
-              { text: "Совместная поездка или встреча", type: "time" },
-              { text: "Что-то полезное, что облегчает жизнь", type: "help" },
-              { text: "Что-то уютное и личное", type: "touch" }
-            ]
-          },
-          {
-            text: "Что ты чаще делаешь в отношениях?",
-            answers: [
-              { text: "Мотивирую и говорю приятное", type: "words" },
-              { text: "Стараюсь быть рядом как можно чаще", type: "time" },
-              { text: "Беру на себя часть забот", type: "help" },
-              { text: "Ищу физическую близость", type: "touch" }
-            ]
-          },
-          {
-            text: "Что для тебя означает «меня любят»?",
-            answers: [
-              { text: "Мне это говорят и подтверждают словами", type: "words" },
-              { text: "На меня находят время", type: "time" },
-              { text: "Обо мне заботятся поступками", type: "help" },
-              { text: "Со мной нежны и ласковы", type: "touch" }
-            ]
-          },
-          {
-            text: "Когда ты скучаешь, тебе хочется...",
-            answers: [
-              { text: "Получить сообщение или звонок", type: "words" },
-              { text: "Увидеться лично", type: "time" },
-              { text: "Сделать что-то полезное для человека", type: "help" },
-              { text: "Обнять человека", type: "touch" }
-            ]
-          },
-          {
-            text: "Что укрепляет твою привязанность?",
-            answers: [
-              { text: "Искренние признания", type: "words" },
-              { text: "Регулярное внимание", type: "time" },
-              { text: "Надежность в поступках", type: "help" },
-              { text: "Тактильная близость", type: "touch" }
-            ]
-          }
-        ],
-        results: {
-          words: {
-            label: "Любовь через слова",
-            title: "Тебе важны признание, поддержка и честные разговоры",
-            description: "Ты особенно чувствуешь любовь через слова: комплименты, признания, поддержку и теплые сообщения. Для тебя важно слышать, что ты нужен и ценен. Холодность, молчание или грубые фразы могут ранить тебя сильнее, чем кажется другим."
-          },
-          time: {
-            label: "Любовь через время",
-            title: "Для тебя любовь — это внимание и присутствие",
-            description: "Ты чувствуешь любовь, когда человек выбирает быть рядом: гуляет с тобой, слушает, проводит время без постоянных отвлечений. Для тебя важно не количество красивых слов, а реальное присутствие."
-          },
-          help: {
-            label: "Любовь через заботу",
-            title: "Ты веришь поступкам больше, чем словам",
-            description: "Для тебя любовь проявляется через действия: помощь, надежность, поддержку в делах и готовность быть полезным. Ты ценишь, когда человек не просто обещает, а делает."
-          },
-          touch: {
-            label: "Любовь через прикосновения",
-            title: "Тебе важны нежность, тепло и физическая близость",
-            description: "Ты особенно чувствуешь близость через объятия, прикосновения, поцелуи и спокойное присутствие рядом. Для тебя телесное тепло часто говорит больше, чем длинные объяснения."
-          }
-        }
-      }
-    ];
-
-    let currentCategory = "all";
-    let currentTest = null;
-    let currentQuestionIndex = 0;
-    let answers = [];
-
-    const sections = {
-      home: document.getElementById("home"),
-      tests: document.getElementById("tests"),
-      quiz: document.getElementById("quiz"),
-      result: document.getElementById("result")
+  // === ТЕСТ 1 ===
+  function orient(type) {
+    const out = document.getElementById('orient-result');
+    const map = {
+      male: "Ты гей 🌈 (это норм)",
+      female: "Ты натурал(ка) 💕",
+      both: "Ты би, и это нормально 😎",
+      none: "Ты сыроед-асексуал 🧀"
     };
+    out.textContent = map[type];
+    out.style.transform = "scale(1.5)";
+    setTimeout(() => out.style.transform = "scale(1)", 300);
+    melody([[440, 0.1, 0], [660, 0.1, 100], [880, 0.15, 200]]);
+    spawnMeme('🌈');
+    spawnMeme('👨‍❤️‍👨');
+  }
 
-    const testsGrid = document.getElementById("testsGrid");
-    const categoryTabs = document.getElementById("categoryTabs");
-    const searchInput = document.getElementById("searchInput");
-    const testsCount = document.getElementById("testsCount");
+  // === ТЕСТ 2 ===
+  function bread(type) {
+    const out = document.getElementById('bread-result');
+    const map = {
+      white: "Ты белый и пушистый, как батон 🥖",
+      black: "Ты суровый чёрный хлебушек 🖤",
+      none: "Ты странный человек. Хлеб — это жизнь.",
+      all: "ХЛЕБНЫЙ БОГ. Преклоняюсь. 🍞👑"
+    };
+    out.textContent = map[type];
+    out.style.transform = "scale(1.5) rotate(10deg)";
+    setTimeout(() => out.style.transform = "scale(1) rotate(0)", 300);
+    melody([[330, 0.1, 0], [392, 0.1, 100], [523, 0.2, 200]]);
+    spawnMeme('🍞');
+    spawnMeme('🥖');
+  }
 
-    const quizTitle = document.getElementById("quizTitle");
-    const counter = document.getElementById("counter");
-    const progressBar = document.getElementById("progressBar");
-    const questionText = document.getElementById("questionText");
-    const answersBox = document.getElementById("answers");
-    const prevBtn = document.getElementById("prevBtn");
-    const questionContent = document.getElementById("questionContent");
-
-    const resultEmoji = document.getElementById("resultEmoji");
-    const scoreRing = document.getElementById("scoreRing");
-    const scoreText = document.getElementById("scoreText");
-    const resultLabel = document.getElementById("resultLabel");
-    const resultTitle = document.getElementById("resultTitle");
-    const resultDescription = document.getElementById("resultDescription");
-    const resultBars = document.getElementById("resultBars");
-
-    function showSection(name) {
-      Object.values(sections).forEach(section => section.classList.remove("active"));
-      sections[name].classList.add("active");
-      window.scrollTo({ top: 0, behavior: "smooth" });
+  // === ТЕСТ 3 ===
+  function gohnah() {
+    const out = document.getElementById('gohnah-result');
+    out.textContent = "ИДИ НА ХУЙ 🖕😡";
+    melody([[220, 0.2, 0], [180, 0.3, 200], [140, 0.5, 500]]);
+    let count = 0;
+    const spammer = setInterval(() => {
+      spawnMeme('🖕');
+      beep(150 + Math.random() * 100, 0.05, 'sawtooth', 0.03);
+      count++;
+      if (count >= 10) clearInterval(spammer);
+    }, 150);
+    for (let i = 0; i < 5; i++) {
+      setTimeout(() => alert("ИДИ НА ХУЙ 🖕"), i * 400);
     }
+  }
 
-    function getCategoryTitle(id) {
-      return categories.find(category => category.id === id)?.title || "Другое";
+  // === ЕЩЁ ПРИКОЛЮШЕК ===
+  const funEmojis = ['🐸', '💩', '🔥', '🍞', '🌈', '🖕', '👽', '😹', '🤡', '💀', '🧀', '🐱', '🐹', '🔫', '🐶', '🛁'];
+  const funTexts = [
+    "Вот такая хуйня, собачка 🐶🛁",
+    "Хомяк с пистолетом 🔫🐹",
+    "Колобок — хлеб с лицом скуфа 🍞",
+    "И Владу 🍖",
+    "Муся, это ты? 🐯",
+    "Шопинг модный лук 🎧🐱"
+  ];
+  function moreFun() {
+    const out = document.getElementById('extra-result');
+    out.textContent = funTexts[Math.floor(Math.random() * funTexts.length)];
+    out.style.color = ['red','blue','green','purple','orange'][Math.floor(Math.random()*5)];
+    out.style.fontSize = (18 + Math.random() * 15) + 'px';
+    melody([[400,0.05,0],[500,0.05,80],[600,0.05,160],[700,0.1,240]]);
+    for (let i = 0; i < 5; i++) {
+      setTimeout(() => spawnMeme(funEmojis[Math.floor(Math.random() * funEmojis.length)]), i * 100);
     }
+    beep(100 + Math.random() * 400, 0.1, 'sawtooth', 0.06);
+  }
 
-    function goHome() {
-      showSection("home");
+  // === МЕМЧИКИ ===
+  const memeEmojis = ['🐸', '💩', '🔥', '🍞', '🌈', '🖕', '👽', '😹', '🤡', '💀', '🧀', '🐱', '🐹', '🔫', '🐶', '🛁', '🎉', '❤️'];
+  function spawnMeme(emoji) {
+    const el = document.createElement('div');
+    el.className = 'meme';
+    el.textContent = emoji;
+    el.style.left = Math.random() * 90 + 'vw';
+    el.style.fontSize = (30 + Math.random() * 50) + 'px';
+    el.style.animationDuration = (4 + Math.random() * 6) + 's';
+    document.body.appendChild(el);
+    setTimeout(() => el.remove(), 11000);
+  }
+
+  setInterval(() => {
+    spawnMeme(memeEmojis[Math.floor(Math.random() * memeEmojis.length)]);
+  }, 1500);
+
+  // === КОТИК ===
+  let catPets = 0;
+  function petCat() {
+    catPets++;
+    const cat = document.getElementById('cat');
+    const faces = ['🐱', '😺', '😸', '😻', '🙀', '😼', '😽'];
+    cat.textContent = faces[catPets % faces.length];
+    melody([[880, 0.08, 0], [1200, 0.06, 80], [700, 0.1, 150]]);
+    spawnMeme('❤️');
+    if (catPets % 5 === 0) {
+      spawnMeme('💕');
+      alert("МЯУ! Ты погладил котика " + catPets + " раз(а). Котик доволен 🐱");
     }
+  }
 
-    function showTests(category = currentCategory) {
-      currentCategory = category || "all";
-      renderCategories();
-      renderTests();
-      showSection("tests");
-    }
-
-    function renderCategories() {
-      categoryTabs.innerHTML = "";
-
-      categories.forEach(category => {
-        const button = document.createElement("button");
-        button.className = "category-tab";
-        if (category.id === currentCategory) button.classList.add("active");
-        button.textContent = category.title;
-
-        button.onclick = () => {
-          currentCategory = category.id;
-          renderCategories();
-          renderTests();
-        };
-
-        categoryTabs.appendChild(button);
-      });
-    }
-
-    function getFilteredTests() {
-      const query = searchInput.value.trim().toLowerCase();
-
-      return tests.filter(test => {
-        const categoryMatch = currentCategory === "all" || test.category === currentCategory;
-        const searchMatch =
-          test.title.toLowerCase().includes(query) ||
-          test.short.toLowerCase().includes(query) ||
-          getCategoryTitle(test.category).toLowerCase().includes(query);
-
-        return categoryMatch && searchMatch;
-      });
-    }
-
-    function renderTests() {
-      const filtered = getFilteredTests();
-      testsGrid.innerHTML = "";
-
-      if (!filtered.length) {
-        testsGrid.innerHTML = `
-          <div class="empty">
-            Ничего не найдено. Попробуй другую категорию или измени поиск.
-          </div>
-        `;
-        return;
+  // === KONAMI ===
+  const konami = ['ArrowUp','ArrowUp','ArrowDown','ArrowDown','ArrowLeft','ArrowRight','ArrowLeft','ArrowRight','b','a'];
+  let kIdx = 0;
+  document.addEventListener('keydown', (e) => {
+    if (e.key === konami[kIdx]) {
+      kIdx++;
+      if (kIdx === konami.length) {
+        kIdx = 0;
+        konamiMode();
       }
+    } else { kIdx = 0; }
+  });
 
-      filtered.forEach((test, index) => {
-        const card = document.createElement("div");
-        card.className = "test-card fade-item";
-        card.style.animationDelay = `${index * 0.045}s`;
-        card.style.setProperty("--cardColor", test.color);
+  function konamiMode() {
+    document.body.style.animation = "spin 0.5s linear infinite";
+    melody([[523,0.1,0],[659,0.1,100],[784,0.1,200],[1047,0.3,300]]);
+    for (let i = 0; i < 60; i++) setTimeout(() => spawnMeme('🎉'), i * 80);
+    alert("🎉🎉🎉 ТЫ НАШЁЛ ПАСХАЛКУ! ВЕСЬ САЙТ КРУТИТСЯ! 🎉🎉🎉");
+    setTimeout(() => { document.body.style.animation = ""; }, 4000);
+  }
 
-        card.innerHTML = `
-          <div class="test-meta">
-            <div class="test-icon">${test.icon}</div>
-            <div class="test-time">10 вопросов</div>
-          </div>
+  // === РАНДОМ В ЗАГОЛОВКЕ ===
+  const titleEmojis = ['🔥','✨','💩','🐸','🍞','🌈','😹','🖕','🐹'];
+  setInterval(() => {
+    document.title = "T I P A " + titleEmojis[Math.floor(Math.random() * titleEmojis.length)];
+  }, 800);
 
-          <h3>${test.title}</h3>
-          <p>${test.short}</p>
-
-          <div class="test-footer">
-            <span class="test-category">${getCategoryTitle(test.category)}</span>
-            <button class="start-test" onclick="startTest('${test.id}')">Начать</button>
-          </div>
-        `;
-
-        testsGrid.appendChild(card);
-      });
+  // === КЛИК ПО ФОНУ ===
+  document.body.addEventListener('click', (e) => {
+    if (e.target.tagName === 'BODY' || e.target.tagName === 'H1' || e.target.tagName === 'MARQUEE' || e.target.tagName === 'DIV') {
+      beep(200 + Math.random() * 400, 0.05, 'triangle', 0.03);
     }
+  });
 
-    function showRandomTest() {
-      const random = tests[Math.floor(Math.random() * tests.length)];
-      startTest(random.id);
-    }
+  // === АВТО-ПРИКОЛ ПРИ ЗАГРУЗКЕ ===
+  setTimeout(() => {
+    beep(600, 0.1, 'sine', 0.05);
+    spawnMeme('🐸');
+    spawnMeme('💩');
+  }, 500);
 
-    function startTest(testId) {
-      currentTest = tests.find(test => test.id === testId);
-      currentQuestionIndex = 0;
-      answers = [];
+</script>
 
-      quizTitle.textContent = currentTest.title;
-      showSection("quiz");
-      renderQuestion();
-    }
-
-    function renderQuestion() {
-      const total = currentTest.questions.length;
-      const question = currentTest.questions[currentQuestionIndex];
-
-      questionContent.style.animation = "none";
-      questionContent.offsetHeight;
-      questionContent.style.animation = "questionIn .35s ease both";
-
-      counter.textContent = `${currentQuestionIndex + 1} / ${total}`;
-      progressBar.style.width = `${((currentQuestionIndex + 1) / total) * 100}%`;
-      prevBtn.style.visibility = currentQuestionIndex === 0 ? "hidden" : "visible";
-
-      answersBox.innerHTML = "";
-
-      if (currentTest.type === "scale" || currentTest.type === "spectrum") {
-        questionText.textContent = question;
-
-        currentTest.options.forEach(option => {
-          const button = document.createElement("button");
-          button.className = "answer";
-          button.textContent = option.text;
-
-          button.onclick = () => {
-            answers[currentQuestionIndex] = option.value;
-            nextQuestion();
-          };
-
-          answersBox.appendChild(button);
-        });
-      }
-
-      if (currentTest.type === "personality") {
-        questionText.textContent = question.text;
-
-        question.answers.forEach(answer => {
-          const button = document.createElement("button");
-          button.className = "answer";
-          button.textContent = answer.text;
-
-          button.onclick = () => {
-            answers[currentQuestionIndex] = answer.type;
-            nextQuestion();
-          };
-
-          answersBox.appendChild(button);
-        });
-      }
-    }
-
-    function nextQuestion() {
-      if (currentQuestionIndex < currentTest.questions.length - 1) {
-        currentQuestionIndex++;
-        renderQuestion();
-      } else {
-        finishTest();
-      }
-    }
-
-    function prevQuestion() {
-      if (currentQuestionIndex > 0) {
-        currentQuestionIndex--;
-        renderQuestion();
-      }
-    }
-
-    function backToTests() {
-      showTests(currentCategory);
-    }
-
-    function finishTest() {
-      if (currentTest.type === "scale" || currentTest.type === "spectrum") {
-        finishScaleTest();
-      }
-
-      if (currentTest.type === "personality") {
-        finishPersonalityTest();
-      }
-    }
-
-    function finishScaleTest() {
-      const totalScore = answers.reduce((sum, value) => sum + value, 0);
-      const maxScore = currentTest.questions.length * 4;
-      const percent = Math.round((totalScore / maxScore) * 100);
-
-      const result = currentTest.results.find(item => {
-        return percent >= item.min && percent <= item.max;
-      });
-
-      const bars = [
-        {
-          label: currentTest.leftLabel || "Уровень",
-          value: currentTest.type === "spectrum" ? 100 - percent : percent
-        },
-        {
-          label: currentTest.rightLabel || "Баллы",
-          value: currentTest.type === "spectrum" ? percent : Math.round(percent * 0.82)
-        },
-        {
-          label: "Баланс",
-          value: Math.max(12, 100 - Math.abs(50 - percent) * 2)
-        }
-      ];
-
-      showResult({
-        percent,
-        label: result.label,
-        title: result.title,
-        description: result.description,
-        emoji: currentTest.emoji,
-        bars
-      });
-    }
-
-    function finishPersonalityTest() {
-      const counts = {};
-
-      answers.forEach(type => {
-        counts[type] = (counts[type] || 0) + 1;
-      });
-
-      let winner = Object.keys(counts)[0];
-
-      Object.keys(counts).forEach(type => {
-        if (counts[type] > counts[winner]) {
-          winner = type;
-        }
-      });
-
-      const percent = Math.round((counts[winner] / currentTest.questions.length) * 100);
-      const result = currentTest.results[winner];
-
-      const bars = Object.keys(currentTest.results).map(type => ({
-        label: currentTest.results[type].label,
-        value: Math.round(((counts[type] || 0) / currentTest.questions.length) * 100)
-      }));
-
-      showResult({
-        percent,
-        label: result.label,
-        title: result.title,
-        description: result.description,
-        emoji: currentTest.emoji,
-        bars
-      });
-    }
-
-    function showResult(data) {
-      resultEmoji.textContent = data.emoji;
-      resultLabel.textContent = data.label;
-      resultTitle.textContent = data.title;
-      resultDescription.textContent = data.description;
-
-      scoreText.textContent = "0%";
-      scoreRing.style.strokeDashoffset = 478;
-
-      renderResultBars(data.bars || []);
-
-      showSection("result");
-
-      setTimeout(() => {
-        animateScore(data.percent);
-        animateBars();
-      }, 250);
-    }
-
-    function animateScore(target) {
-      const circumference = 478;
-      const targetOffset = circumference - (circumference * target) / 100;
-      let current = 0;
-
-      scoreRing.style.strokeDashoffset = targetOffset;
-
-      const duration = 1300;
-      const start = performance.now();
-
-      function update(now) {
-        const progress = Math.min((now - start) / duration, 1);
-        const eased = 1 - Math.pow(1 - progress, 4);
-        current = Math.round(target * eased);
-        scoreText.textContent = `${current}%`;
-
-        if (progress < 1) {
-          requestAnimationFrame(update);
-        } else {
-          scoreText.textContent = `${target}%`;
-        }
-      }
-
-      requestAnimationFrame(update);
-    }
-
-    function renderResultBars(bars) {
-      resultBars.innerHTML = "";
-
-      bars.forEach(bar => {
-        const row = document.createElement("div");
-        row.className = "result-bar-row";
-
-        row.innerHTML = `
-          <span>${bar.label}</span>
-          <div class="result-bar-track">
-            <div class="result-bar-fill" data-value="${bar.value}"></div>
-          </div>
-          <strong>${bar.value}%</strong>
-        `;
-
-        resultBars.appendChild(row);
-      });
-    }
-
-    function animateBars() {
-      const fills = document.querySelectorAll(".result-bar-fill");
-
-      fills.forEach((fill, index) => {
-        setTimeout(() => {
-          fill.style.width = `${fill.dataset.value}%`;
-        }, index * 130);
-      });
-    }
-
-    function restartCurrentTest() {
-      if (!currentTest) {
-        showTests();
-        return;
-      }
-
-      currentQuestionIndex = 0;
-      answers = [];
-      showSection("quiz");
-      renderQuestion();
-    }
-
-    testsCount.textContent = tests.length;
-    renderCategories();
-    renderTests();
-  </script>
 </body>
 </html>
